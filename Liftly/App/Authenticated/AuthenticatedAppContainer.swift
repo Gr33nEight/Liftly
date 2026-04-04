@@ -8,7 +8,7 @@
 import Foundation
 
 final class AuthenticatedAppContainer {
-    private let currentUserId: String
+    let currentUserId: String
     
     init(currentUserId: String) {
         self.currentUserId = currentUserId

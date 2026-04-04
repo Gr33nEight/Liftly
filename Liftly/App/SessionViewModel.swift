@@ -23,6 +23,8 @@ final class SessionViewModel: ObservableObject {
     
     init(observeSession: ObserveSessionUseCase) {
         self.observeSession = observeSession
+        
+        start()
     }
     
     deinit {

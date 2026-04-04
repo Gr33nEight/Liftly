@@ -14,9 +14,9 @@ struct AppEntry: View {
         case .loading:
             ProgressView()
         case .authenticated(let authenticatedAppContainer):
-            Text("Authenticated")
+            AuthenticatedAppRootView(container: authenticatedAppContainer)
         case .unauthenticated(let unAuthenticatedAppContainer):
-            Text("UnAuthenticated")
+            UnAuthenticatedAppRootView(container: unAuthenticatedAppContainer)
         }
     }
 }
