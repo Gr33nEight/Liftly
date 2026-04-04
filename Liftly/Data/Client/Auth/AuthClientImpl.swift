@@ -5,7 +5,7 @@
 //  Created by Natanael Jop on 04/04/2026.
 //
 
-import FirebaseAuth
+@preconcurrency import FirebaseAuth
 
 final class AuthClientImpl: AuthClient {
     let auth: Auth
