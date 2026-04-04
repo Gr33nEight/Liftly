@@ -14,8 +14,25 @@ struct UnAuthenticatedAppRootView: View {
         self.container = container
     }
     
+    @State private var email: String = ""
+    @State private var password: String = ""
+    
     var body: some View {
-        Text("UnAuthenticated")
-            .font(.title)
+        VStack {
+            Text("UnAuthenticated")
+                .font(.title)
+            
+            TextField("Email", text: $email)
+            SecureField("Password", text: $password)
+            Button("Sign In") {
+                Task {
+                    do {
+                        try await container.signUpUseCase.execute(email: email, password: password)
+                    } catch {
+                        print("Error: ", error.localizedDescription)
+                    }
+                }
+            }
+        }.padding(20)
     }
 }

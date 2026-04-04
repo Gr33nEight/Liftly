@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+enum NavigationAction {
+    case push(Route)
+    case unwind(Route?)
+}

@@ -15,11 +15,7 @@ struct AuthenticatedAppRootView: View {
     }
     
     var body: some View {
-        VStack {
-            Text("Authenticated")
-                .font(.title)
-            Text("User ID: \(container.currentUserId)")
-        }
+        NavigationStackContentView(container: container)
     }
 }
 

@@ -6,9 +6,10 @@
 //
 
 import Foundation
+import FirebaseFirestore
 
 struct UserDTO: Codable, Sendable {
-    var id: String?
+    @DocumentID var id: String?
     var name: String
     var email: String
 }

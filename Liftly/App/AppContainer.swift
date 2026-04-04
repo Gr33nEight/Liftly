@@ -11,7 +11,7 @@ final class AppContainer {
     lazy private var authClient: AuthClient = AuthClientImpl()
     lazy private var firestoreClient: FirestoreClient = FirestoreClientImpl()
     
-    lazy private var authRepository: AuthRepository = AuthRepositoryImpl(authClient: authClient)
+    lazy private var authRepository: AuthRepository = AuthRepositoryImpl(authClient: authClient, firestoreClient: firestoreClient)
     
     lazy private var observeSession: ObserveSessionUseCase = ObserveSessionUseCaseImpl(authRepository: authRepository)
     

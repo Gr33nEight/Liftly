@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+enum Route {
+    case otherProfile
+    case comments
+    case workoutDetail
+    case routine
+    case activeWorkout
+}
