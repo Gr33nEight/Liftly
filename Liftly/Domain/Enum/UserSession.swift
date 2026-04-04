@@ -1,0 +1,13 @@
+//
+//  UserSession.swift
+//  Liftly
+//
+//  Created by Natanael Jop on 04/04/2026.
+//
+
+import Foundation
+
+enum UserSession {
+    case loggedOut
+    case loggedIn(uid: String)
+}
