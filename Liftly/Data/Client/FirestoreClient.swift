@@ -5,4 +5,49 @@
 //  Created by Natanael Jop on 04/04/2026.
 //
 
-import Foundation
+import FirebaseFirestore
+
+protocol FirestoreClient {
+    func fetch<E: FirestoreEndpoint>(
+        _ endpoint: E.Type,
+        quuery: FirestoreQuery
+    ) async throws -> [E.DTO]
+    
+    func fetchDocument<E: FirestoreEndpoint>(
+        _ endpoint: E.Type,
+        id: FirestoreDocumentID
+    ) async throws -> E.DTO
+    
+    func setData<E: FirestoreEndpoint>(
+        _ dto: E.DTO,
+        for endpoint: E.Type,
+        id: FirestoreDocumentID,
+        merge: Bool
+    ) async throws
+    
+    func updateData<E: FirestoreEndpoint>(
+        for endpoint: E.Type,
+        id: FirestoreDocumentID,
+        _ fields: [String : FirestoreUpdateOperations]
+    ) async throws
+    
+    func delete<E: FirestoreEndpoint>(
+        for endpoint: E.Type,
+        id: FirestoreDocumentID,
+    ) async throws
+    
+    func listen<E: FirestoreEndpoint>(
+        _ endpoint: E.Type,
+        query: FirestoreQuery
+    ) -> AsyncThrowingStream<[E.DTO], Error>
+    
+    func listenDocument<E: FirestoreEndpoint>(
+        _ endpoint: E.Type,
+        id: FirestoreDocumentID
+    ) -> AsyncThrowingStream<E.DTO, Error>
+    
+    func create<E: FirestoreEndpoint>(
+        _ dto: E.DTO,
+        for endpoint: E.Type
+    ) async throws -> FirestoreDocumentID
+}

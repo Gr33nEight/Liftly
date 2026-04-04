@@ -9,5 +9,5 @@ import Foundation
 
 protocol FirestoreEndpoint {
     associatedtype DTO: Codable
-    static var path: String { get }
+    nonisolated static var path: String { get }
 }
