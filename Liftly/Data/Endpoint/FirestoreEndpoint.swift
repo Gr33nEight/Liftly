@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol FirestoreEndpoint {
-    associatedtype DTO: Codable
-    nonisolated static var path: String { get }
+protocol FirestoreEndpoint: Sendable {
+    associatedtype DTO: Codable & Sendable
+    static var path: String { get }
 }

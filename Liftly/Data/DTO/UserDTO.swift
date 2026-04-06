@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import FirebaseFirestore
+@preconcurrency import FirebaseFirestore
 
 struct UserDTO: Codable, Sendable {
     @DocumentID var id: String?

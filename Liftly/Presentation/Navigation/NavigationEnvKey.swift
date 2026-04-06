@@ -7,10 +7,12 @@
 
 import SwiftUI
 
+@MainActor
 struct NavigationEnvironmentKey: EnvironmentKey {
-    static var defaultValue: (NavigationAction) -> Void = { _ in } 
+    static let defaultValue: (NavigationAction) -> Void = { _ in }
 }
 
+@MainActor
 extension EnvironmentValues {
     var navigate: (NavigationAction) -> Void {
         get { self[NavigationEnvironmentKey.self] }

@@ -39,9 +39,10 @@ final class AuthClientImpl: AuthClient {
                     continuation.yield(nil)
                 }
             }
+            let auth = self.auth
             continuation.onTermination = { @Sendable _ in
                 Task { @MainActor in
-                    self.auth.removeStateDidChangeListener(handle)
+                    auth.removeStateDidChangeListener(handle)
                 }
             }
         }

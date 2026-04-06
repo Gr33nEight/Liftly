@@ -6,9 +6,8 @@
 //
 
 import Foundation
-import FirebaseFirestore
+@preconcurrency import FirebaseFirestore
 
-@MainActor
 final class FirestoreClientImpl: FirestoreClient {
     private let db: Firestore
     
@@ -97,10 +96,10 @@ final class FirestoreClientImpl: FirestoreClient {
         }
     }
     
-    func listenDocument<E>(
+    func listenDocument<E: FirestoreEndpoint>(
         _ endpoint: E.Type,
         id: FirestoreDocumentID
-    ) -> AsyncThrowingStream<E.DTO, Error> where E : FirestoreEndpoint {
+    ) -> AsyncThrowingStream<E.DTO, Error> {
         AsyncThrowingStream { continuation in
             let ref = db.collection(endpoint.path).document(id.value)
             let listener = ref.addSnapshotListener { snapshot, error in
@@ -108,16 +107,14 @@ final class FirestoreClientImpl: FirestoreClient {
                     continuation.finish(throwing: error)
                     return
                 }
-                
-                guard let snapshot else { return }
-                
+
+                guard snapshot?.exists == true, let snapshot else { return }
+
                 do {
-                    guard snapshot.exists else { return }
                     let data = try snapshot.data(as: E.DTO.self)
                     continuation.yield(data)
                 } catch {
                     continuation.finish(throwing: error)
-                    return
                 }
             }
             continuation.onTermination = { @Sendable _ in

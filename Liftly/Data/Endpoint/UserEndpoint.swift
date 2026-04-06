@@ -9,5 +9,5 @@ import Foundation
 
 enum UserEndpoint: FirestoreEndpoint {
     typealias DTO = UserDTO
-    static var path: String = "users"
+    static let path: String = "users"
 }
