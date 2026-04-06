@@ -9,27 +9,18 @@ import Foundation
 
 final class AuthRepositoryImpl: AuthRepository {
     private let authClient: AuthClient
-    private let firestoreClient: FirestoreClient
     
-    init(authClient: AuthClient, firestoreClient: FirestoreClient) {
+    init(authClient: AuthClient) {
         self.authClient = authClient
-        self.firestoreClient = firestoreClient
     }
     
     func signIn(email: String, password: String) async throws {
         _ = try await authClient.signIn(email: email, password: password)
     }
     
-    func signUp(email: String, password: String) async throws {
+    func signUp(email: String, password: String) async throws -> AuthSession {
         let session = try await authClient.signUp(email: email, password: password)
-        
-        let newUserDto = UserDTO(
-            id: session.uid,
-            name: email.components(separatedBy: "@").first ?? "User",
-            email: email
-        )
-        
-        try await firestoreClient.setData(newUserDto, for: UserEndpoint.self, id: .init(value: session.uid), merge: false)
+        return .init(uid: session.uid)
     }
     
     func signOut() throws {
@@ -52,3 +43,5 @@ final class AuthRepositoryImpl: AuthRepository {
         }
     }
 }
+
+

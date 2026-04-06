@@ -11,7 +11,8 @@ final class UnAuthenticatedAppContainer {
     lazy private var authClient: AuthClient = AuthClientImpl()
     lazy private var firestoreClient: FirestoreClient = FirestoreClientImpl()
     
-    lazy private var authRepository: AuthRepository = AuthRepositoryImpl(authClient: authClient, firestoreClient: firestoreClient)
+    lazy private var authRepository: AuthRepository = AuthRepositoryImpl(authClient: authClient)
+    lazy private var userRepository: UserRepository = UserRepositoryImpl(firestoreClient: firestoreClient)
     
-    lazy var signUpUseCase: SignUpUseCase = SignUpUseCaseImpl(authRepository: authRepository)
+    lazy var signUpUseCase: SignUpUseCase = SignUpUseCaseImpl(authRepository: authRepository, userRepository: userRepository)
 }
