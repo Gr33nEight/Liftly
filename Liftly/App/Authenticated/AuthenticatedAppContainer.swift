@@ -11,14 +11,28 @@ final class AuthenticatedAppContainer {
     lazy private var authClient: AuthClient = AuthClientImpl()
     lazy private var firestoreClient: FirestoreClient = FirestoreClientImpl()
     
-    lazy private var authRepository: AuthRepository = AuthRepositoryImpl(authClient: authClient, firestoreClient: firestoreClient)
+    lazy private var exerciseStorage: ExerciseStorage = ExerciseStorage()
+    
+    lazy private var authRepository: AuthRepository = AuthRepositoryImpl(authClient: authClient)
+    lazy private var trakcedExerciseRepository: TrackedExerciseRepository = TrackedExerciseRepositoryImpl(firestoreClient: firestoreClient)
+    lazy private var exerciseRepository: ExerciseRepository = ExerciseRepositoryImpl(storage: exerciseStorage)
+    lazy private var postRepository: PostRepository = PostRepositoryImpl(firestoreClient: firestoreClient)
+    lazy private var userRepository: UserRepository = UserRepositoryImpl(firestoreClient: firestoreClient)
+    lazy private var workoutRepository: WorkoutRepository = WorkoutRepositoryImpl(firestoreClient: firestoreClient)
     
     lazy private var signOutUseCase: SignOutUseCase = SignOutUseCaseImpl(authRepository: authRepository)
+    lazy private var getExercisesUseCase: GetExercisesUseCase = GetExercisesUseCaseImpl(exerciseRepository: exerciseRepository)
+    
     
     let currentUserId: String
     
     init(currentUserId: String) {
         self.currentUserId = currentUserId
+    }
+    
+    @MainActor
+    private func makeWorkoutViewModel() -> WorkoutViewModel {
+        WorkoutViewModel(getExercises: getExercisesUseCase)
     }
     
     @MainActor
@@ -37,7 +51,7 @@ final class AuthenticatedAppContainer {
     
     @MainActor
     func makeWorkoutView() -> some View {
-        Text("Workout View")
+        WorkoutView(viewModel: self.makeWorkoutViewModel())
     }
     
     @MainActor

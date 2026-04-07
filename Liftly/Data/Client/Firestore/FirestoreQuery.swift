@@ -23,6 +23,15 @@ extension FirestoreQuery {
         return copy
     }
     
+    func isIn(
+        _ field: FirestoreField,
+        _ values: [FirestoreValue]
+    ) -> Self {
+        var copy = self
+        copy.filters.append(.isIn(field: field, values: values))
+        return copy
+    }
+    
     func limit(_ value: Int) -> Self {
         var copy = self
         copy.limit = value
