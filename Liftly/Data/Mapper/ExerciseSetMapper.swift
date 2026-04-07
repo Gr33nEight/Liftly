@@ -7,42 +7,43 @@
 
 import Foundation
 
-enum ExerciseSetMapper {
-    static func toDTO(_ domain: ExerciseSet) -> ExerciseSetDTO {
-        return ExerciseSetDTO(
-            type: mapTypeToRaw(domain),
-            previous: domain.previous,
-            value: domain.value,
-            personalRecord: domain.personalRecord
-        )
-    }
-    
-    static func toDomain(_ dto: ExerciseSetDTO) -> ExerciseSet {
-        return ExerciseSet(
-            type: mapTypeToDomain(dto),
-            previous: dto.previous,
-            value: dto.value,
-            personalRecord: dto.personalRecord
-        )
-    }
-    
-    private static func mapTypeToRaw(_ domain: ExerciseSet) -> Int {
-        switch domain.type {
-        case .warmUp: return 0
-        case .normal: return 1
-        case .failure: return 2
-        case .drop: return 3
+extension ExerciseMapper {
+    enum ExerciseSetMapper {
+        static func toDTO(_ domain: ExerciseSet) -> ExerciseSetDTO {
+            return ExerciseSetDTO(
+                type: mapTypeToRaw(domain),
+                previous: domain.previous,
+                value: domain.value,
+                personalRecord: domain.personalRecord
+            )
         }
-    }
-    
-    private static func extractNumber(_ type: SetType) -> Int? {
-        switch type {
-        case .normal(let num): return num
-        default: return nil
+        
+        static func toDomain(_ dto: ExerciseSetDTO) -> ExerciseSet {
+            return ExerciseSet(
+                type: mapTypeToDomain(dto),
+                previous: dto.previous,
+                value: dto.value,
+                personalRecord: dto.personalRecord
+            )
         }
-    }
-    
-    private static func mapTypeToDomain(_ dto: ExerciseSetDTO) -> SetType {
+        
+        private static func mapTypeToRaw(_ domain: ExerciseSet) -> Int {
+            switch domain.type {
+            case .warmUp: return 0
+            case .normal: return 1
+            case .failure: return 2
+            case .drop: return 3
+            }
+        }
+        
+        private static func extractNumber(_ type: SetType) -> Int? {
+            switch type {
+            case .normal(let num): return num
+            default: return nil
+            }
+        }
+        
+        private static func mapTypeToDomain(_ dto: ExerciseSetDTO) -> SetType {
             switch dto.type {
             case 0:
                 return .warmUp
@@ -56,4 +57,5 @@ enum ExerciseSetMapper {
                 return .normal(0)
             }
         }
+    }
 }

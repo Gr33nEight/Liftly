@@ -9,6 +9,7 @@ import Foundation
 
 struct Workout: Identifiable {
     var id: String
+    var workoutId: String
     var duration: Int
     var volume: Int
     var sets: Int

@@ -12,8 +12,13 @@ final class AuthenticatedAppContainer {
     lazy private var firestoreClient: FirestoreClient = FirestoreClientImpl()
     
     lazy private var authRepository: AuthRepository = AuthRepositoryImpl(authClient: authClient)
+    lazy private var exerciseRepository: ExerciseRepository = ExerciseRepositoryImpl(firestoreClient: firestoreClient)
+    lazy private var postRepository: PostRepository = PostRepositoryImpl(firestoreClient: firestoreClient)
+    lazy private var userRepository: UserRepository = UserRepositoryImpl(firestoreClient: firestoreClient)
+    lazy private var workoutRepository: WorkoutRepository = WorkoutRepositoryImpl(firestoreClient: firestoreClient)
     
     lazy private var signOutUseCase: SignOutUseCase = SignOutUseCaseImpl(authRepository: authRepository)
+    
     
     let currentUserId: String
     

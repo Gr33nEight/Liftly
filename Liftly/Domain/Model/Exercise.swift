@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Exercise {
+struct Exercise: Codable, Sendable {
     var title: String
     var image: URL?
     var howTo: String

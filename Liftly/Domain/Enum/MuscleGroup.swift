@@ -6,7 +6,7 @@
 //
 
 
-enum MuscleGroup: Int, CaseIterable {
+enum MuscleGroup: Int, CaseIterable, Codable {
     case abdominals
     case abductors
     case adductors

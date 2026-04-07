@@ -6,7 +6,7 @@
 //
 
 
-enum ExerciseType: Int, CaseIterable {
+enum ExerciseType: Int, CaseIterable, Codable {
     case weightReps
     case bodyweightReps
     case weightedBodyweight

@@ -17,9 +17,9 @@ final class FirestoreClientImpl: FirestoreClient {
     
     func fetch<E>(
         _ endpoint: E.Type,
-        quuery: FirestoreQuery
+        query: FirestoreQuery
     ) async throws -> [E.DTO] where E : FirestoreEndpoint {
-        let ref = handleQuery(quuery, path: endpoint.path)
+        let ref = handleQuery(query, path: endpoint.path)
         let snapshot = try await ref.getDocuments()
         return try snapshot.documents.compactMap {
             try $0.data(as: E.DTO.self)

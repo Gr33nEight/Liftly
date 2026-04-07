@@ -10,6 +10,7 @@
 
 struct WorkoutDTO: Codable, Sendable {
     @DocumentID var id: String?
+    var workoutId: String
     var duration: Int
     var volume: Int
     var sets: Int

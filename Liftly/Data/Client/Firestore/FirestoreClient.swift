@@ -10,7 +10,7 @@ import FirebaseFirestore
 protocol FirestoreClient {
     func fetch<E: FirestoreEndpoint>(
         _ endpoint: E.Type,
-        quuery: FirestoreQuery
+        query: FirestoreQuery
     ) async throws -> [E.DTO]
     
     func fetchDocument<E: FirestoreEndpoint>(

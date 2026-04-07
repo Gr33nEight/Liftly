@@ -6,7 +6,7 @@
 //
 
 
-enum Equipment: Int, CaseIterable {
+enum Equipment: Int, CaseIterable, Codable {
     case none
     case barbell
     case dumbell
