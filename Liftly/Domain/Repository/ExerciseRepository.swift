@@ -8,9 +8,5 @@
 import Foundation
 
 protocol ExerciseRepository {
-    func fetchExercise(by id: String) async throws -> TrackedExercise
-    func fetchExercises(by workoutId: String) async throws -> [TrackedExercise]
-    func createExercise(_ exercise: TrackedExercise) async throws -> String
-    func updateExercise(_ exercise: TrackedExercise) async throws
-    func deleteExercise(by id: String) async throws
+    func getAll() async -> [Exercise]
 }
