@@ -12,13 +12,14 @@ import Combine
 @MainActor
 final class WorkoutViewModel: ObservableObject {
     
+    @Published var post: PostEntry?
     @Published var duration: Int = 0
     @Published var exercises: [Exercise] = []
     @Published var activeWorkout: Workout?
     @Published var trackedExercises: [TrackedExercise] = []
     
     private let getExercisesUseCase: GetExercisesUseCase
-    private let createWorkoutUseCase: CreateWorkoutUseCase
+    private let createPostUseCase: CreatePostUseCase
     
     var totalSets: Int {
         trackedExercises.flatMap { $0.sets }.count
@@ -32,10 +33,10 @@ final class WorkoutViewModel: ObservableObject {
     
     init(
         getExercisesUseCase: GetExercisesUseCase,
-        createWorkoutUseCase: CreateWorkoutUseCase
+        createPostUseCase: CreatePostUseCase
     ) {
         self.getExercisesUseCase = getExercisesUseCase
-        self.createWorkoutUseCase = createWorkoutUseCase
+        self.createPostUseCase = createPostUseCase
     }
     
     func onAppear() async {
@@ -43,16 +44,13 @@ final class WorkoutViewModel: ObservableObject {
         setupMock()
     }
     
-    func createWorkout() async {
-        guard let workout = activeWorkout else { return }
+    func createPost() async {
+        guard let entry = post else { return }
         
         do {
-            try await createWorkoutUseCase.execute(
-                workout: workout,
-                trackedExercises: trackedExercises
-            )
+            try await createPostUseCase.execute(entry: entry)
         } catch {
-            print("Error:", error)
+            print("Error: \(error.localizedDescription)")
         }
     }
     
@@ -64,12 +62,13 @@ final class WorkoutViewModel: ObservableObject {
 
 
 extension WorkoutViewModel {
+    
     private func setupMock() {
         let workoutId = UUID().uuidString
+        let postId = UUID().uuidString
 
         let mockExercises: [TrackedExercise] = [
 
-            // 🏋️ weight & reps
             TrackedExercise(
                 id: UUID().uuidString,
                 workoutId: workoutId,
@@ -82,7 +81,6 @@ extension WorkoutViewModel {
                 ]
             ),
 
-            // 💪 bodyweight
             TrackedExercise(
                 id: UUID().uuidString,
                 workoutId: workoutId,
@@ -95,7 +93,6 @@ extension WorkoutViewModel {
                 ]
             ),
 
-            // ⏱ duration
             TrackedExercise(
                 id: UUID().uuidString,
                 workoutId: workoutId,
@@ -108,7 +105,6 @@ extension WorkoutViewModel {
                 ]
             ),
 
-            // 🏃 distance + duration (Twój przykład, ale lepiej)
             TrackedExercise(
                 id: UUID().uuidString,
                 workoutId: workoutId,
@@ -120,7 +116,6 @@ extension WorkoutViewModel {
                 ]
             ),
 
-            // 🏋️ duration + weight
             TrackedExercise(
                 id: UUID().uuidString,
                 workoutId: workoutId,
@@ -130,31 +125,30 @@ extension WorkoutViewModel {
                     ExerciseSet(type: .normal(1), value: .durationWeight(seconds: 40, weight: 20)),
                     ExerciseSet(type: .normal(2), value: .durationWeight(seconds: 50, weight: 25))
                 ]
-            ),
-
-            // 🧪 edge case (ważne do testów UI)
-            TrackedExercise(
-                id: UUID().uuidString,
-                workoutId: workoutId,
-                exercise: exercises.randomElement() ?? .empty,
-                restTime: "10",
-                sets: [
-                    ExerciseSet(type: .warmUp, value: .weightReps(weight: 20, reps: 15)),
-                    ExerciseSet(type: .drop, value: .weightReps(weight: 40, reps: 20))
-                ]
             )
         ]
 
         self.trackedExercises = mockExercises
 
-        let workout = Workout(
+        let workoutEntry = WorkoutEntry(
             id: workoutId,
             duration: duration,
-            volume: totalVolume,
-            sets: totalSets,
-            exercisesIds: mockExercises.map { $0.id }
+            volume: mockExercises.flatMap { $0.sets }.reduce(0) { $0 + $1.value.volume },
+            sets: mockExercises.flatMap { $0.sets }.count,
+            exercises: mockExercises
         )
 
-        self.activeWorkout = workout
+        let postEntry = PostEntry(
+            id: postId,
+            ownerId: "mock-user",
+            title: "Leg day 🔥",
+            description: "Solid workout today",
+            image: nil,
+            likedUsersIds: [],
+            commentsIds: [],
+            workout: workoutEntry
+        )
+
+        self.post = postEntry
     }
 }

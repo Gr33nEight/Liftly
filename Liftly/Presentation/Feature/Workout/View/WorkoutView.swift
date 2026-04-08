@@ -12,9 +12,9 @@ struct WorkoutView: View {
     var body: some View {
         VStack {
             Text("Workout View")
-            Button("Add Workout") {
+            Button("Add Post") {
                 Task {
-                    await viewModel.createWorkout()
+                    await viewModel.createPost()
                 }
             }
         }.task {

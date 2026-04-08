@@ -7,17 +7,16 @@
 
 import Foundation
 
-final class PostRepositoryImpl: PostRepository {
+final class PostRepositoryImpl: PostRepository, @unchecked Sendable {
     private let firestoreClient: FirestoreClient
     
     init(firestoreClient: FirestoreClient) {
         self.firestoreClient = firestoreClient
     }
     
-    func createPost(post: Post) async throws {
-        let dto = PostMapper.toDTO(post)
-        let postId = try await firestoreClient.create(dto, for: PostEndpoint.self)
-        try await firestoreClient.setData(dto, for: PostEndpoint.self, id: postId, merge: false)
+    func createPost(_ entry: PostEntry, transaction: Transaction) throws {
+        let dto = PostMapper.toDTO(entry)
+        try transaction.setData(dto, for: PostEndpoint.self, id: .init(value: entry.id))
     }
     
     func deletePost(by id: String) async throws {
@@ -39,4 +38,16 @@ final class PostRepositoryImpl: PostRepository {
         let dto = PostMapper.toDTO(post)
         try await firestoreClient.setData(dto, for: PostEndpoint.self, id: .init(value: post.id), merge: true)
     }
+}
+
+
+struct PostEntry {
+    var id: String
+    var ownerId: String
+    var title: String
+    var description: String
+    var image: URL?
+    var likedUsersIds: [String]
+    var commentsIds: [String]
+    var workout: WorkoutEntry
 }

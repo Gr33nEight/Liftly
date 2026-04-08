@@ -14,10 +14,23 @@ enum PostMapper {
             ownerId: domain.ownerId,
             title: domain.title,
             description: domain.description,
-            image: mapImage(domain),
+            image: mapImage(domain.image),
             likedUsersIds: domain.likedUsersIds,
             commentsIds: domain.commentsIds,
             workoutId: domain.workoutId
+        )
+    }
+    
+    static func toDTO(_ entry: PostEntry) -> PostDTO {
+        return PostDTO(
+            id: entry.id,
+            ownerId: entry.ownerId,
+            title: entry.title,
+            description: entry.description,
+            image: mapImage(entry.image),
+            likedUsersIds: entry.likedUsersIds,
+            commentsIds: entry.commentsIds,
+            workoutId: entry.workout.id
         )
     }
     
@@ -79,7 +92,8 @@ enum PostMapper {
         return URL(string: dto.image)
     }
     
-    private static func mapImage(_ domain: Post) -> String {
-        return domain.image?.absoluteString ?? ""
+    private static func mapImage(_ image: URL?) -> String {
+        return image?.absoluteString ?? ""
     }
+    
 }
