@@ -8,7 +8,26 @@
 
 struct ExerciseSet {
     var type: SetType
-    var previous: String
-    var value: String
-    var personalRecord: Bool
+    var value: ExerciseValue
+}
+
+extension ExerciseSet {
+    static func create(
+        type: SetType,
+        exerciseType: ExerciseType,
+        value: ExerciseValue
+    ) -> ExerciseSet {
+
+        if value.matches(exerciseType) {
+            return ExerciseSet(
+                type: type,
+                value: value
+            )
+        } else {
+            return ExerciseSet(
+                type: type,
+                value: exerciseType.defaultValue()
+            )
+        }
+    }
 }

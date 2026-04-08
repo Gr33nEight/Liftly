@@ -9,7 +9,5 @@
 struct ExerciseSetDTO: Codable, Sendable {
     var number: Int?
     var type: Int
-    var previous: String
-    var value: String
-    var personalRecord: Bool
+    var value: ExerciseValueDTO
 }

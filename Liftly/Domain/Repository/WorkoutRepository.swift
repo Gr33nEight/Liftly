@@ -8,7 +8,7 @@
 import Foundation
 
 protocol WorkoutRepository {
-    func createWorkout(_ workout: Workout) async throws
+    func createWorkout(_ entry: WorkoutEntry) async throws 
     func deleteWorkout(by id: String) async throws
     func updateWorkout(_ workout: Workout) async throws
     func fetchWorkouts(by ownersIds: [String]) async throws -> [Workout]

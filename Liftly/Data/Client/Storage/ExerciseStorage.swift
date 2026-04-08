@@ -23,6 +23,7 @@ final actor ExerciseStorage {
         }
         
         cache = decoded
+        
         return decoded
     }
 }

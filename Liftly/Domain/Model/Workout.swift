@@ -9,9 +9,8 @@ import Foundation
 
 struct Workout: Identifiable {
     var id: String
-    var workoutId: String
     var duration: Int
-    var volume: Int
+    var volume: Double
     var sets: Int
     var exercisesIds: [String]
 }

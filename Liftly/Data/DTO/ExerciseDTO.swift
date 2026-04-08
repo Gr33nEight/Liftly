@@ -10,6 +10,7 @@ import Foundation
 
 struct ExerciseDTO: Codable, Sendable {
     @DocumentID var id: String?
+    var workoutId: String
     var title: String
     var image: String
     var howTo: String

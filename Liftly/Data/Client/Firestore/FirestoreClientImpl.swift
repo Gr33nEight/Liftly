@@ -130,6 +130,22 @@ final class FirestoreClientImpl: FirestoreClient {
         return FirestoreDocumentID(value: ref.documentID)
     }
     
+    func runTransaction(_ block: @Sendable @escaping (Transaction) throws -> Void) async throws {
+        _ = try await db.runTransaction { rawTx, errorPointer in
+
+            let tx = FirestoreTransaction(raw: rawTx)
+
+            do {
+                try block(tx)
+            } catch {
+                errorPointer?.pointee = error as NSError
+                return nil
+            }
+
+            return nil
+        }
+    }
+    
     private func handleQuery(_ query: FirestoreQuery, path: String) -> Query {
         var ref: Query = db.collection(path)
         

@@ -22,7 +22,7 @@ final class AuthenticatedAppContainer {
     
     lazy private var signOutUseCase: SignOutUseCase = SignOutUseCaseImpl(authRepository: authRepository)
     lazy private var getExercisesUseCase: GetExercisesUseCase = GetExercisesUseCaseImpl(exerciseRepository: exerciseRepository)
-    
+    lazy private var createWorkoutUseCase: CreateWorkoutUseCase = CreateWorkoutUseCaseImpl(workoutRepository: workoutRepository)
     
     let currentUserId: String
     
@@ -32,7 +32,10 @@ final class AuthenticatedAppContainer {
     
     @MainActor
     private func makeWorkoutViewModel() -> WorkoutViewModel {
-        WorkoutViewModel(getExercises: getExercisesUseCase)
+        WorkoutViewModel(
+            getExercisesUseCase: getExercisesUseCase,
+            createWorkoutUseCase: createWorkoutUseCase
+        )
     }
     
     @MainActor
