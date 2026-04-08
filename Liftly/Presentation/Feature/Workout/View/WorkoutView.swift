@@ -22,3 +22,7 @@ struct WorkoutView: View {
         }
     }
 }
+
+#Preview {
+    WorkoutView(viewModel: WorkoutViewModel(getExercisesUseCase: MockGetExercisesUseCase(), createPostUseCase: MockCreatePostUseCase()))
+}

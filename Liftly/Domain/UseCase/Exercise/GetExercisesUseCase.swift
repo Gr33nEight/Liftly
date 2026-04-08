@@ -20,3 +20,10 @@ final class GetExercisesUseCaseImpl: GetExercisesUseCase {
         await exerciseRepository.getAll()
     }
 }
+
+
+final class MockGetExercisesUseCase: GetExercisesUseCase {
+    func execute() async -> [Exercise] {
+        return MockData.exercises
+    }
+}

@@ -39,3 +39,9 @@ final class CreatePostUseCaseImpl: CreatePostUseCase {
         }
     }
 }
+
+final class MockCreatePostUseCase: CreatePostUseCase {
+    func execute(entry: PostEntry) async throws {
+        return
+    }
+}
