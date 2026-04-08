@@ -15,9 +15,22 @@
 		3C8589F12F7DA874005AB567 /* Liftly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Liftly.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3C43F8FA2F86CA1700CF08B1 /* Exceptions for "Liftly" folder in "Liftly" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3C8589F02F7DA874005AB567 /* Liftly */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3C8589F32F7DA874005AB567 /* Liftly */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3C43F8FA2F86CA1700CF08B1 /* Exceptions for "Liftly" folder in "Liftly" target */,
+			);
 			path = Liftly;
 			sourceTree = "<group>";
 		};
@@ -272,6 +285,7 @@
 				DEVELOPMENT_TEAM = 5C4DAU25T3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Liftly/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -306,6 +320,7 @@
 				DEVELOPMENT_TEAM = 5C4DAU25T3;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Liftly/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

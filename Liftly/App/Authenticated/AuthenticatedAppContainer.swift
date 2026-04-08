@@ -36,8 +36,7 @@ final class AuthenticatedAppContainer {
     @MainActor
     private func makeWorkoutViewModel() -> WorkoutViewModel {
         WorkoutViewModel(
-            getExercisesUseCase: getExercisesUseCase,
-            createPostUseCase: createPostUseCase
+            getExercisesUseCase: getExercisesUseCase
         )
     }
     
@@ -52,8 +51,8 @@ final class AuthenticatedAppContainer {
     }
     
     @MainActor
-    private func makeActiveWorkoutViewModel() -> ActiveWorkoutViewModel {
-        ActiveWorkoutViewModel()
+    private func makeActiveWorkoutViewModel(routineId: String) -> ActiveWorkoutViewModel {
+        ActiveWorkoutViewModel(routineId: routineId, createPostUseCase: createPostUseCase)
     }
     
     @MainActor
@@ -93,8 +92,8 @@ final class AuthenticatedAppContainer {
     }
     
     @MainActor
-    func makeActiveWorkoutView() -> some View {
-        ActiveWorkoutView(viewModel: self.makeActiveWorkoutViewModel())
+    func makeActiveWorkoutView(routineId: String) -> some View {
+        ActiveWorkoutView(viewModel: self.makeActiveWorkoutViewModel(routineId: routineId))
     }
     
     @MainActor
