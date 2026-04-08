@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class TrackedExerciseRepositoryImpl: TrackedExerciseRepository {
+final class TrackedExerciseRepositoryImpl: TrackedExerciseRepository, @unchecked Sendable {
     private let firestoreClient: FirestoreClient
     
     init(firestoreClient: FirestoreClient) {
@@ -29,6 +29,15 @@ final class TrackedExerciseRepositoryImpl: TrackedExerciseRepository {
         let dto = ExerciseMapper.toDTO(exercise)
         try await firestoreClient.setData(dto, for: ExerciseEndpoint.self, id: .init(value: exercise.id), merge: false)
         return exercise.id
+    }
+    
+    func createExercises(_ exercises: [TrackedExercise], transaction: Transaction) throws {
+        let dtos = exercises.map({ ExerciseMapper.toDTO($0) })
+        
+        for dto in dtos {
+            guard let dtoId = dto.id else { continue }
+            try transaction.setData(dto, for: ExerciseEndpoint.self, id: .init(value: dtoId))
+        }
     }
     
     func updateExercise(_ exercise: TrackedExercise) async throws {

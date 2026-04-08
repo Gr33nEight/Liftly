@@ -12,21 +12,17 @@ struct WorkoutView: View {
     var body: some View {
         VStack {
             Text("Workout View")
-            ScrollView {
-                ForEach(viewModel.exercises.indices, id: \.self) { index in
-                    let exercise = viewModel.exercises[index]
-                    VStack {
-                        Text("Name: \(exercise.title)")
-                        Text("How to: \(exercise.howTo)")
-                        Text("Equipment: \(exercise.equipment.displayName)")
-                        Text("Primary: \(exercise.primaryMuscleGroup.displayName)")
-                        Text("Other: \(exercise.otherMuscleGroup.displayName)")
-                        Text("Type: \(exercise.exerciseType.displayName)")
-                    }
+            Button("Add Post") {
+                Task {
+                    await viewModel.createPost()
                 }
             }
         }.task {
             await viewModel.onAppear()
         }
     }
+}
+
+#Preview {
+    WorkoutView(viewModel: WorkoutViewModel(getExercisesUseCase: MockGetExercisesUseCase(), createPostUseCase: MockCreatePostUseCase()))
 }

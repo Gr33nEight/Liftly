@@ -50,4 +50,8 @@ protocol FirestoreClient {
         _ dto: E.DTO,
         for endpoint: E.Type
     ) async throws -> FirestoreDocumentID
+    
+    func runTransaction(
+        _ block: @Sendable @escaping (Transaction) throws -> Void
+    ) async throws
 }

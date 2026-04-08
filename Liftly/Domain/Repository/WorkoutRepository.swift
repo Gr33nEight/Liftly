@@ -7,8 +7,8 @@
 
 import Foundation
 
-protocol WorkoutRepository {
-    func createWorkout(_ workout: Workout) async throws
+protocol WorkoutRepository: Sendable {
+    func createWorkout(_ entry: WorkoutEntry, transaction: Transaction) throws 
     func deleteWorkout(by id: String) async throws
     func updateWorkout(_ workout: Workout) async throws
     func fetchWorkouts(by ownersIds: [String]) async throws -> [Workout]

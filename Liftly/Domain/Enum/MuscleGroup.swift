@@ -7,7 +7,7 @@
 
 
 enum MuscleGroup: Int, CaseIterable, Codable {
-    case abdominals
+    case abdominals = 0
     case abductors
     case adductors
     case biceps
@@ -27,6 +27,11 @@ enum MuscleGroup: Int, CaseIterable, Codable {
     case triceps
     case upperBack
     case other
+    
+    init(from decoder: Decoder) throws {
+       let raw = try decoder.singleValueContainer().decode(Int.self)
+       self = MuscleGroup(rawValue: raw) ?? .other
+   }
 }
 
 extension MuscleGroup {

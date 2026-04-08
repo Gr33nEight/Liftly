@@ -9,40 +9,40 @@ import Foundation
 
 extension ExerciseMapper {
     enum ExerciseSetMapper {
+
         static func toDTO(_ domain: ExerciseSet) -> ExerciseSetDTO {
             return ExerciseSetDTO(
-                type: mapTypeToRaw(domain),
-                previous: domain.previous,
-                value: domain.value,
-                personalRecord: domain.personalRecord
+                number: extractNumber(domain.type),
+                type: mapTypeToRaw(domain.type),
+                value: ExerciseValueMapper.toDTO(domain.value)
             )
         }
-        
+
         static func toDomain(_ dto: ExerciseSetDTO) -> ExerciseSet {
             return ExerciseSet(
                 type: mapTypeToDomain(dto),
-                previous: dto.previous,
-                value: dto.value,
-                personalRecord: dto.personalRecord
+                value: ExerciseValueMapper.toDomain(dto.value)
             )
         }
-        
-        private static func mapTypeToRaw(_ domain: ExerciseSet) -> Int {
-            switch domain.type {
+
+        // MARK: - TYPE
+
+        private static func mapTypeToRaw(_ type: SetType) -> Int {
+            switch type {
             case .warmUp: return 0
             case .normal: return 1
             case .failure: return 2
             case .drop: return 3
             }
         }
-        
+
         private static func extractNumber(_ type: SetType) -> Int? {
             switch type {
             case .normal(let num): return num
             default: return nil
             }
         }
-        
+
         private static func mapTypeToDomain(_ dto: ExerciseSetDTO) -> SetType {
             switch dto.type {
             case 0:
@@ -54,7 +54,7 @@ extension ExerciseMapper {
             case 3:
                 return .drop
             default:
-                return .normal(0)
+                return .normal(1)
             }
         }
     }

@@ -16,3 +16,9 @@ struct Exercise: Codable, Sendable {
     var otherMuscleGroup: MuscleGroup
     var exerciseType: ExerciseType
 }
+
+extension Exercise {
+    static var empty: Exercise {
+        Exercise(title: "", howTo: "", equipment: .none, primaryMuscleGroup: .other, otherMuscleGroup: .other, exerciseType: .other)
+    }
+}

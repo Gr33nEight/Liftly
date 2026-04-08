@@ -7,16 +7,16 @@
 
 import Foundation
 
-final class WorkoutRepositoryImpl: WorkoutRepository {
+final class WorkoutRepositoryImpl: WorkoutRepository, @unchecked Sendable {
     private let firestoreClient: FirestoreClient
     
     init(firestoreClient: FirestoreClient) {
         self.firestoreClient = firestoreClient
     }
     
-    func createWorkout(_ workout: Workout) async throws {
-        let dto = WorkoutMapper.toDTO(workout)
-        try await firestoreClient.setData(dto, for: WorkoutEndpoint.self, id: .init(value: workout.id), merge: false)
+    func createWorkout(_ entry: WorkoutEntry, transaction: Transaction) throws {
+        let dto = WorkoutMapper.toDTO(entry)
+        try transaction.setData(dto, for: WorkoutEndpoint.self, id: .init(value: entry.id))
     }
     
     func deleteWorkout(by id: String) async throws {

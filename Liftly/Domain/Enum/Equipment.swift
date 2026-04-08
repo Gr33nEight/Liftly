@@ -7,7 +7,7 @@
 
 
 enum Equipment: Int, CaseIterable, Codable {
-    case none
+    case none = 0
     case barbell
     case dumbell
     case kettlebell
@@ -16,6 +16,11 @@ enum Equipment: Int, CaseIterable, Codable {
     case resistanceBand
     case suspensionBand
     case other
+    
+    init(from decoder: Decoder) throws {
+       let raw = try decoder.singleValueContainer().decode(Int.self)
+       self = Equipment(rawValue: raw) ?? .other
+   }
 }
 
 extension Equipment {

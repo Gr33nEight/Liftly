@@ -11,6 +11,7 @@ enum ExerciseMapper {
     static func toDTO(_ domain: TrackedExercise) -> ExerciseDTO {
         return ExerciseDTO(
             id: domain.id,
+            workoutId: domain.workoutId,
             title: domain.exercise.title,
             image: mapImage(domain.exercise),
             howTo: domain.exercise.howTo,
@@ -30,6 +31,7 @@ enum ExerciseMapper {
         
         return TrackedExercise(
             id: id,
+            workoutId: dto.workoutId,
             exercise: mapExercise(dto),
             restTime: dto.restTime,
             sets: mapSetToDomain(dto)

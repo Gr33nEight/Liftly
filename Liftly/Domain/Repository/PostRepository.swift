@@ -7,8 +7,8 @@
 
 import Foundation
 
-protocol PostRepository {
-    func createPost(post: Post) async throws
+protocol PostRepository: Sendable {
+    func createPost(_ entry: PostEntry, transaction: Transaction) throws
     func deletePost(by id: String) async throws
     func listenToPost(by id: String) -> AsyncThrowingStream<Post, Error>
     func listenToPosts(by ownersIds: [String]) -> AsyncThrowingStream<[Post], Error>
