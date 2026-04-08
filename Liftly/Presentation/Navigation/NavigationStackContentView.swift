@@ -22,7 +22,7 @@ struct NavigationStackContentView: View {
                     case .comments: container.makeCommentsView()
                     case .otherProfile: container.makeOtherProfileView()
                     case .routine: container.makeRoutineView()
-                    case .workoutDetail: container.makeWorkoutDetailView()
+                    case .workoutDetail: container.makeWorkoutDetailsView()
                     }
                 }
         }

@@ -42,17 +42,44 @@ final class AuthenticatedAppContainer {
     }
     
     @MainActor
+    private func makeHomeViewModel() -> HomeViewModel {
+        HomeViewModel()
+    }
+    
+    @MainActor
+    private func makeProfileViewModel() -> ProfileViewModel {
+        ProfileViewModel()
+    }
+    
+    @MainActor
+    private func makeActiveWorkoutViewModel() -> ActiveWorkoutViewModel {
+        ActiveWorkoutViewModel()
+    }
+    
+    @MainActor
+    private func makeCommentsViewModel() -> CommentsViewModel {
+        CommentsViewModel()
+    }
+    
+    @MainActor
+    private func makeOtherProfileViewModel() -> OtherProfileViewModel {
+        OtherProfileViewModel()
+    }
+    
+    @MainActor
+    private func makeRoutineViewModel() -> RoutineViewModel {
+        RoutineViewModel()
+    }
+    
+    @MainActor
+    private func makeWorkoutDetailsViewModel() -> WorkoutDetailsViewModel {
+        WorkoutDetailsViewModel()
+    }
+    
+    
+    @MainActor
     func makeHomeView() -> some View {
-        VStack {
-            Text("Home View")
-            Button("Sign Out") {
-                do {
-                    try self.signOutUseCase.execute()
-                } catch {
-                    print("Error: ", error.localizedDescription)
-                }
-            }
-        }.padding(20)
+        HomeView(viewModel: self.makeHomeViewModel())
     }
     
     @MainActor
@@ -62,32 +89,32 @@ final class AuthenticatedAppContainer {
     
     @MainActor
     func makeProfileView() -> some View {
-        Text("Profile View")
+        ProfileView(viewModel: self.makeProfileViewModel())
     }
     
     @MainActor
     func makeActiveWorkoutView() -> some View {
-        Text("Active Workout View")
+        ActiveWorkoutView(viewModel: self.makeActiveWorkoutViewModel())
     }
     
     @MainActor
     func makeCommentsView() -> some View {
-        Text("Comments View")
+        CommentsView(viewModel: self.makeCommentsViewModel())
     }
     
     @MainActor
     func makeOtherProfileView() -> some View {
-        Text("Other Profile View")
+        OtherProfileView(viewModel: self.makeOtherProfileViewModel())
     }
     
     @MainActor
     func makeRoutineView() -> some View {
-        Text("Routine View")
+        RoutineView(viewModel: self.makeRoutineViewModel())
     }
     
     @MainActor
-    func makeWorkoutDetailView() -> some View {
-        Text("Workout Detail View")
+    func makeWorkoutDetailsView() -> some View {
+        WorkoutDetailsView(viewModel: self.makeWorkoutDetailsViewModel())
     }
     
 }
