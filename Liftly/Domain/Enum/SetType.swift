@@ -6,7 +6,7 @@
 //
 
 
-enum SetType: CaseIterable {
+enum SetType: CaseIterable, Hashable {
     case warmUp
     case normal(Int)
     case failure
@@ -18,6 +18,15 @@ enum SetType: CaseIterable {
         case .normal: return 1
         case .failure: return 2
         case .drop: return 3
+        }
+    }
+    
+    var displayedValue: String {
+        switch self {
+        case .warmUp: return "W"
+        case .normal(let value): return "\(value)"
+        case .failure: return "F"
+        case .drop: return "D"
         }
     }
     

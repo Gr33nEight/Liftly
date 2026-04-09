@@ -9,5 +9,8 @@
 struct ExerciseSetDTO: Codable, Sendable {
     var number: Int?
     var type: Int
-    var value: ExerciseValueDTO
+    var weight: Double?
+    var reps: Int?
+    var seconds: Int?
+    var distance: Int?    
 }

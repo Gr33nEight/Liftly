@@ -5,29 +5,34 @@
 //  Created by Natanael Jop on 06/04/2026.
 //
 
+import SwiftUI
 
-struct ExerciseSet {
+struct ExerciseSet: Identifiable {
+    var id: UUID = UUID()
     var type: SetType
-    var value: ExerciseValue
+    var isDone: Bool = false
+    var weight: Double?
+    var reps: Int?
+    var seconds: Int?
+    var distance: Int?
 }
 
 extension ExerciseSet {
     static func create(
         type: SetType,
-        exerciseType: ExerciseType,
-        value: ExerciseValue
+        exerciseType: ExerciseType
     ) -> ExerciseSet {
+        var set = ExerciseSet(type: type)
+        exerciseType.configure(set: &set)
+        return set
+    }
+}
 
-        if value.matches(exerciseType) {
-            return ExerciseSet(
-                type: type,
-                value: value
-            )
-        } else {
-            return ExerciseSet(
-                type: type,
-                value: exerciseType.defaultValue()
-            )
+extension ExerciseSet {
+    var volume: Double {
+        if let weight, let reps {
+            return weight * Double(reps)
         }
+        return 0
     }
 }

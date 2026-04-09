@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct RoutineCellView: View {
+    @Environment(\.navigate) var navigate
     let routine: Routine
     var body: some View {
         Button {
@@ -30,7 +31,7 @@ struct RoutineCellView: View {
                     .lineLimit(2)
                     .multilineTextAlignment(.leading)
                 Button("Start Routine") {
-                    
+                    navigate(.push(.activeWorkout(routineId: routine.id.uuidString)))
                 }.customButtonStyle(.primary)
                     .padding(.top, 5)
             }.customBackground()

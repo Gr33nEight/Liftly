@@ -8,15 +8,29 @@
 import SwiftUI
 
 struct WorkoutView: View {
+    @Environment(\.navigate) var navigate
     @StateObject var viewModel: WorkoutViewModel
     var body: some View {
-        VStack(alignment: .leading, spacing: 30) {
+        VStack(alignment: .leading, spacing: 20) {
             Text("Workout")
                 .font(.custom.largeTitle())
                 .foregroundStyle(Color.custom.text)
-            routinesView
-            myRoutinesView
-        }.padding()
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 30) {
+                    Button {
+                        navigate(.push(.activeWorkout(routineId: nil)))
+                    } label: {
+                        Text("＋ Start Empty Workout")
+                            .font(.custom.body())
+                            .foregroundStyle(Color.custom.text)
+                            .frame(maxWidth: .infinity)
+                            .customBackground()
+                    }
+                    routinesView
+                    myRoutinesView
+                }
+            }
+        }.padding(.horizontal)
         .frame(maxWidth: .infinity)
         .background(Color.custom.background)
         .task {
@@ -61,10 +75,9 @@ extension WorkoutView {
             Text("MY ROUTINES (3)")
                 .font(.custom.bodyMedium())
                 .foregroundStyle(Color.custom.tertiary)
-            ScrollView(showsIndicators: false) {
-                ForEach(viewModel.routines) { routine in
-                    RoutineCellView(routine: routine)
-                }
+            
+            ForEach(viewModel.routines) { routine in
+                RoutineCellView(routine: routine)
             }
         }
     }

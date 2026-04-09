@@ -14,15 +14,19 @@ extension ExerciseMapper {
             return ExerciseSetDTO(
                 number: extractNumber(domain.type),
                 type: mapTypeToRaw(domain.type),
-                value: ExerciseValueMapper.toDTO(domain.value)
-            )
+                weight: domain.weight,
+                reps: domain.reps,
+                seconds: domain.seconds,
+                distance: domain.distance)
         }
 
         static func toDomain(_ dto: ExerciseSetDTO) -> ExerciseSet {
             return ExerciseSet(
                 type: mapTypeToDomain(dto),
-                value: ExerciseValueMapper.toDomain(dto.value)
-            )
+                weight: dto.weight,
+                reps: dto.reps,
+                seconds: dto.seconds,
+                distance: dto.distance)
         }
 
         // MARK: - TYPE

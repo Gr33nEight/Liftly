@@ -67,3 +67,64 @@ extension ExerciseType {
         }
     }
 }
+
+extension ExerciseType {
+    func configure(set: inout ExerciseSet) {
+        switch self {
+        case .weightReps:
+            set.weight = 0
+            set.reps = 0
+            
+        case .bodyweightReps:
+            set.reps = 0
+            
+        case .duration:
+            set.seconds = 0
+            
+        case .durationWeight:
+            set.seconds = 0
+            set.weight = 0
+            
+        case .distanceDuration:
+            set.distance = 0
+            set.seconds = 0
+            
+        default:
+            break
+        }
+    }
+}
+
+extension ExerciseType {
+    var usesWeight: Bool {
+        switch self {
+        case .weightReps, .durationWeight, .weightDistance:
+            return true
+        default: return false
+        }
+    }
+    
+    var usesReps: Bool {
+        switch self {
+        case .weightReps, .bodyweightReps:
+            return true
+        default: return false
+        }
+    }
+    
+    var usesDuration: Bool {
+        switch self {
+        case .duration, .durationWeight, .distanceDuration:
+            return true
+        default: return false
+        }
+    }
+    
+    var usesDistance: Bool {
+        switch self {
+        case .distanceDuration, .weightDistance:
+            return true
+        default: return false
+        }
+    }
+}

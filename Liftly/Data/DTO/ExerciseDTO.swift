@@ -18,7 +18,7 @@ struct ExerciseDTO: Codable, Sendable {
     var primaryMuscleGroup: Int
     var otherMuscleGroup: Int
     var exerciseType: Int
-    var restTime: String
+    var restTime: Int
     var sets: [ExerciseSetDTO]
 }
 

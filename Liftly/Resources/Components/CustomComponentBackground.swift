@@ -18,6 +18,7 @@ struct CustomComponentBackground: ViewModifier {
                         .fill(Color.custom.background)
                     RoundedRectangle(cornerRadius: 15)
                         .stroke(Color.custom.secondary.opacity(0.5), lineWidth: 2)
+                        .padding(1)
                 }
             )
     }
@@ -31,6 +32,7 @@ extension View {
 
 #Preview {
     Text("Hello, world!")
+        .frame(maxWidth: .infinity)
         .modifier(CustomComponentBackground())
         .preferredColorScheme(.dark)
 }
