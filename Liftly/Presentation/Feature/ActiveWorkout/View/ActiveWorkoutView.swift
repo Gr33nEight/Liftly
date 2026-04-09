@@ -40,7 +40,7 @@ struct ActiveWorkoutView: View {
                     Spacer()
                     getStartedView
                     Spacer()
-                }
+                }.padding(.bottom, 30)
             } else {
                 ScrollView {
                     ForEach(viewModel.trackedExercises) { ex in
@@ -91,7 +91,7 @@ extension ActiveWorkoutView {
                 }.customButtonStyle(.secondary)
                 Button("Discard Workout") {
                     
-                }.customButtonStyle(.secondary)
+                }.customButtonStyle(.secondary, textColor: .red)
             }
         }.padding(.horizontal)
     }

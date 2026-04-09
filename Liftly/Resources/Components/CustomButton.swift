@@ -22,6 +22,7 @@ struct PrimaryButton: ButtonStyle {
 }
 
 struct SecondaryButton: ButtonStyle {
+    var textColor: Color = Color.custom.text
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(10)
@@ -32,7 +33,7 @@ struct SecondaryButton: ButtonStyle {
                     RoundedRectangle(cornerRadius: 10).fill(Color.custom.background)
                 }
             )
-            .foregroundColor(.custom.text)
+            .foregroundColor(textColor)
             .font(.custom.bodyMedium())
             .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
     }
@@ -58,7 +59,7 @@ extension View {
     func customButtonStyle(_ style: ButtonStyles, color: Color = Color.custom.primary, textColor: Color = Color.custom.text) -> some View {
         switch style {
         case .primary: buttonStyle(PrimaryButton(color: color, textColor: textColor))
-        case .secondary: buttonStyle(SecondaryButton())
+        case .secondary: buttonStyle(SecondaryButton(textColor: textColor))
         case .disabled: buttonStyle(DisabledButton())
         }
     }
