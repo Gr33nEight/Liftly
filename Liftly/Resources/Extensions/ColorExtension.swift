@@ -9,6 +9,10 @@ import SwiftUI
 
 extension Color {
     enum custom {
-        case primary
+        static let primary = Color("LPrimary")
+        static let secondary = Color("LSecondary")
+        static let tertiary = Color("LTertiary")
+        static let background = Color("LBackground")
+        static let text = Color("LText")
     }
 }

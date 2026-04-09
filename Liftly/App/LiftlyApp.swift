@@ -19,6 +19,7 @@ struct LiftlyApp: App {
     var body: some Scene {
         WindowGroup {
             container.makeAppEntry()
+                .preferredColorScheme(.dark)
         }
     }
 }

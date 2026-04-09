@@ -7,10 +7,10 @@
 
 import Foundation
 
-enum Route {
+enum Route: Hashable {
     case otherProfile
     case comments
     case workoutDetail
     case routine
-    case activeWorkout
+    case activeWorkout(routineId: String)
 }

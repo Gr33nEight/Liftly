@@ -12,46 +12,95 @@ import Combine
 @MainActor
 final class WorkoutViewModel: ObservableObject {
     
-    @Published var post: PostEntry?
-    @Published var duration: Int = 0
+    var routines: [Routine] {
+        guard !exercises.isEmpty else { return [] }
+
+        let chest = exercises.filter { $0.primaryMuscleGroup == .chest }
+        let back = exercises.filter { [.lats, .upperBack].contains($0.primaryMuscleGroup) }
+        let shoulders = exercises.filter { $0.primaryMuscleGroup == .shoulders }
+        let biceps = exercises.filter { $0.primaryMuscleGroup == .biceps }
+        let triceps = exercises.filter { $0.primaryMuscleGroup == .triceps }
+        let legs = exercises.filter {
+            [.quadriceps, .hamstrings, .glutes, .calves].contains($0.primaryMuscleGroup)
+        }
+        let core = exercises.filter { $0.primaryMuscleGroup == .abdominals }
+
+        return [
+
+            Routine(
+                title: "Upper Body A",
+                exercises: [
+                    chest.prefix(2),
+                    shoulders.prefix(1),
+                    triceps.prefix(1),
+                    biceps.prefix(1)
+                ].flatMap { $0 }
+            ),
+
+            Routine(
+                title: "Upper Body B",
+                exercises: [
+                    back.prefix(3),
+                    biceps.prefix(2)
+                ].flatMap { $0 }
+            ),
+
+            Routine(
+                title: "Push",
+                exercises: [
+                    chest.prefix(3),
+                    shoulders.prefix(2),
+                    triceps.prefix(2)
+                ].flatMap { $0 }
+            ),
+
+            Routine(
+                title: "Pull",
+                exercises: [
+                    back.prefix(4),
+                    biceps.prefix(2)
+                ].flatMap { $0 }
+            ),
+
+            Routine(
+                title: "Leg Day",
+                exercises: [
+                    legs.prefix(6)
+                ].flatMap { $0 }
+            ),
+
+            Routine(
+                title: "Core",
+                exercises: [
+                    core.prefix(5)
+                ].flatMap { $0 }
+            ),
+
+            Routine(
+                title: "Full Body",
+                exercises: [
+                    chest.prefix(1),
+                    back.prefix(1),
+                    legs.prefix(2),
+                    shoulders.prefix(1),
+                    core.prefix(1)
+                ].flatMap { $0 }
+            )
+        ]
+    }
+    
     @Published var exercises: [Exercise] = []
-    @Published var activeWorkout: Workout?
-    @Published var trackedExercises: [TrackedExercise] = []
     
     private let getExercisesUseCase: GetExercisesUseCase
-    private let createPostUseCase: CreatePostUseCase
-    
-    var totalSets: Int {
-        trackedExercises.flatMap { $0.sets }.count
-    }
-    
-    var totalVolume: Double {
-        trackedExercises
-            .flatMap { $0.sets }
-            .reduce(0) { $0 + $1.value.volume }
-    }
     
     init(
-        getExercisesUseCase: GetExercisesUseCase,
-        createPostUseCase: CreatePostUseCase
+        getExercisesUseCase: GetExercisesUseCase
     ) {
         self.getExercisesUseCase = getExercisesUseCase
-        self.createPostUseCase = createPostUseCase
     }
     
     func onAppear() async {
         await getExercises()
-        setupMock()
-    }
-    
-    func createPost() async {
-        guard let entry = post else { return }
-        
-        do {
-            try await createPostUseCase.execute(entry: entry)
-        } catch {
-            print("Error: \(error.localizedDescription)")
-        }
     }
     
     private func getExercises() async {
@@ -61,94 +110,3 @@ final class WorkoutViewModel: ObservableObject {
 
 
 
-extension WorkoutViewModel {
-    
-    private func setupMock() {
-        let workoutId = UUID().uuidString
-        let postId = UUID().uuidString
-
-        let mockExercises: [TrackedExercise] = [
-
-            TrackedExercise(
-                id: UUID().uuidString,
-                workoutId: workoutId,
-                exercise: exercises.randomElement() ?? .empty,
-                restTime: "90",
-                sets: [
-                    ExerciseSet(type: .normal(1), value: .weightReps(weight: 60, reps: 12)),
-                    ExerciseSet(type: .normal(2), value: .weightReps(weight: 80, reps: 10)),
-                    ExerciseSet(type: .normal(3), value: .weightReps(weight: 100, reps: 6))
-                ]
-            ),
-
-            TrackedExercise(
-                id: UUID().uuidString,
-                workoutId: workoutId,
-                exercise: exercises.randomElement() ?? .empty,
-                restTime: "60",
-                sets: [
-                    ExerciseSet(type: .normal(1), value: .bodyweightReps(reps: 15)),
-                    ExerciseSet(type: .normal(2), value: .bodyweightReps(reps: 12)),
-                    ExerciseSet(type: .failure, value: .bodyweightReps(reps: 10))
-                ]
-            ),
-
-            TrackedExercise(
-                id: UUID().uuidString,
-                workoutId: workoutId,
-                exercise: exercises.randomElement() ?? .empty,
-                restTime: "45",
-                sets: [
-                    ExerciseSet(type: .normal(1), value: .duration(seconds: 30)),
-                    ExerciseSet(type: .normal(2), value: .duration(seconds: 45)),
-                    ExerciseSet(type: .normal(3), value: .duration(seconds: 60))
-                ]
-            ),
-
-            TrackedExercise(
-                id: UUID().uuidString,
-                workoutId: workoutId,
-                exercise: exercises.randomElement() ?? .empty,
-                restTime: "30",
-                sets: [
-                    ExerciseSet(type: .normal(1), value: .distanceDuration(distance: 200, seconds: 60)),
-                    ExerciseSet(type: .normal(2), value: .distanceDuration(distance: 300, seconds: 80))
-                ]
-            ),
-
-            TrackedExercise(
-                id: UUID().uuidString,
-                workoutId: workoutId,
-                exercise: exercises.randomElement() ?? .empty,
-                restTime: "60",
-                sets: [
-                    ExerciseSet(type: .normal(1), value: .durationWeight(seconds: 40, weight: 20)),
-                    ExerciseSet(type: .normal(2), value: .durationWeight(seconds: 50, weight: 25))
-                ]
-            )
-        ]
-
-        self.trackedExercises = mockExercises
-
-        let workoutEntry = WorkoutEntry(
-            id: workoutId,
-            duration: duration,
-            volume: mockExercises.flatMap { $0.sets }.reduce(0) { $0 + $1.value.volume },
-            sets: mockExercises.flatMap { $0.sets }.count,
-            exercises: mockExercises
-        )
-
-        let postEntry = PostEntry(
-            id: postId,
-            ownerId: "mock-user",
-            title: "Leg day 🔥",
-            description: "Solid workout today",
-            image: nil,
-            likedUsersIds: [],
-            commentsIds: [],
-            workout: workoutEntry
-        )
-
-        self.post = postEntry
-    }
-}

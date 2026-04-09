@@ -18,11 +18,11 @@ struct NavigationStackContentView: View {
             NavigationBarContentView(selected: $selected, container: container)
                 .navigationDestination(for: Route.self) { route in
                     switch route {
-                    case .activeWorkout: container.makeActiveWorkoutView()
+                    case .activeWorkout(let routineId): container.makeActiveWorkoutView(routineId: routineId)
                     case .comments: container.makeCommentsView()
                     case .otherProfile: container.makeOtherProfileView()
                     case .routine: container.makeRoutineView()
-                    case .workoutDetail: container.makeWorkoutDetailView()
+                    case .workoutDetail: container.makeWorkoutDetailsView()
                     }
                 }
         }
