@@ -10,40 +10,56 @@ import SwiftUI
 
 struct TrackedExerciseView: View {
     @Binding var trackedExercise: TrackedExercise
+    @State private var showTimerModal: Bool = false
+    
+    var onExerciseRemove: (String) -> Void
+    var onExerciseReplace: (String) -> Void
+    var onDone: (Int) -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
             
             // HEADER
-            HStack {
+            HStack(spacing: 15) {
                 ZStack {
                     Color.custom.tertiary.opacity(0.5)
                     Text("🏋")
                         .font(.title)
                 }
-                .frame(width: 60, height: 60)
+                .frame(width: 50, height: 50)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 
                 Text(trackedExercise.exercise.title)
                     .foregroundStyle(Color.custom.primary)
-                    .font(.title3)
+                    .font(.custom.title2())
                 
                 Spacer()
                 
-                Button(action: {}) {
-                    Image(systemName: "ellipsis")
+                Menu("", systemImage: "ellipsis") {
+                    Button(action: {
+                        onExerciseReplace(trackedExercise.id)
+                    }, label: {
+                        Text("Replace Exercise")
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                    })
+                    Button(role: .destructive, action: {
+                        onExerciseRemove(trackedExercise.id)
+                    }, label: {
+                        Text("Remove Exercise")
+                        Image(systemName: "xmark")
+                    })
                 }
-                .rotationEffect(.degrees(90))
-            }
+            }.padding(.horizontal)
             
             // REST TIMER
             Button {
-                // TODO: timer picker
+                showTimerModal.toggle()
             } label: {
                 Label("Rest Timer: \(trackedExercise.restTime.format())", systemImage: "timer")
             }
             .font(.custom.body())
             .foregroundStyle(Color.custom.secondary)
+            .padding(.horizontal)
             
             // TABLE HEADER
             LazyVGrid(columns: columns, spacing: 12) {
@@ -54,53 +70,62 @@ struct TrackedExerciseView: View {
                 if trackedExercise.hasDistance { Text("DIST") }
                 if trackedExercise.hasDuration { Text("TIME") }
                 
-                Text("✔️")
-            }
+                Image(systemName: "checkmark").font(.title3).bold()
+            }.padding(.horizontal)
             .foregroundStyle(Color.custom.tertiary)
             .font(.custom.subheadline())
             
-            ForEach($trackedExercise.sets) { $set in
-                LazyVGrid(columns: columns, spacing: 12) {
-                    
-                    Text(set.type.displayedValue)
-                    
+            VStack(spacing: 4) {
+                ForEach($trackedExercise.sets) { $set in
+                    LazyVGrid(columns: columns, spacing: 12) {
+                        
+                        Text(set.type.displayedValue).bold()
+                        
 
-                    if trackedExercise.hasWeight {
-                        doubleField(value: $set.weight, placeholder: "kg").foregroundStyle(set.isDone ? Color.custom.text : Color.custom.tertiary)
-                    }
-                    
-                    if trackedExercise.hasReps {
-                        intField(value: $set.reps, placeholder: "reps").foregroundStyle(set.isDone ? Color.custom.text : Color.custom.tertiary)
-                    }
-                    
-                    if trackedExercise.hasDistance {
-                        intField(value: $set.distance, placeholder: "m").foregroundStyle(set.isDone ? Color.custom.text : Color.custom.tertiary)
-                    }
-                    
-                    if trackedExercise.hasDuration {
-                        intField(value: $set.seconds, placeholder: "s").foregroundStyle(set.isDone ? Color.custom.text : Color.custom.tertiary)
-                    }
+                        if trackedExercise.hasWeight {
+                            doubleField(value: $set.weight, placeholder: "kg").foregroundStyle(set.isDone ? Color.custom.text : Color.custom.tertiary.opacity(0.5))
+                        }
+                        
+                        if trackedExercise.hasReps {
+                            intField(value: $set.reps, placeholder: "reps").foregroundStyle(set.isDone ? Color.custom.text : Color.custom.tertiary.opacity(0.5))
+                        }
+                        
+                        if trackedExercise.hasDistance {
+                            intField(value: $set.distance, placeholder: "m").foregroundStyle(set.isDone ? Color.custom.text : Color.custom.tertiary.opacity(0.5))
+                        }
+                        
+                        if trackedExercise.hasDuration {
+                            intField(value: $set.seconds, placeholder: "s").foregroundStyle(set.isDone ? Color.custom.text : Color.custom.tertiary.opacity(0.5))
+                        }
 
-                    
-                    Button {
-                        set.isDone.toggle()
-                    } label: {
-                        Image(systemName: set.isDone ? "checkmark.square.fill" : "square")
-                            .foregroundStyle(
-                                set.isDone ? Color.custom.primary : Color.custom.tertiary
-                            )
-                    }
-                }
+                        
+                        Button {
+                            set.isDone.toggle()
+                            if set.isDone {
+                                onDone(trackedExercise.restTime)
+                            }
+                        } label: {
+                            Image(systemName: set.isDone ? "checkmark.square.fill" : "square")
+                                .foregroundStyle(
+                                    set.isDone ? Color.custom.primary : Color.custom.tertiary
+                                )
+                                .font(.title)
+                        }
+                    }.padding()
+                    .background(Color.custom.tertiary.opacity(0.1))
+                }.font(.custom.metricSmall())
+            }.sheet(isPresented: $showTimerModal) {
+                TimerView(trackedExercise: $trackedExercise)
+                    .presentationDetents([.fraction(0.5)])
             }
             
             // ADD SET
             Button("+ Add Set") {
                 addSet()
             }
-            .customButtonStyle(.primary)
-            .padding(.top)
+            .customButtonStyle(.secondary)
+            .padding([.top, .horizontal])
         }
-        .padding()
     }
     
     private func addSet() {
@@ -140,30 +165,59 @@ struct TrackedExerciseView: View {
     ) -> some View {
         TextField(
             placeholder,
-            value: Binding(
-                get: { value.wrappedValue ?? 0 },
-                set: { value.wrappedValue = $0 }
-            ),
-            format: .number
+            text: Binding(
+                get: {
+                    guard let value = value.wrappedValue else { return "" }
+                    return value == 0 ? "" : String(value)
+                },
+                set: { newValue in
+                    if newValue.isEmpty {
+                        value.wrappedValue = nil
+                    } else {
+                        value.wrappedValue = Double(newValue)
+                    }
+                }
+            )
         )
         .keyboardType(.decimalPad)
         .frame(width: 50)
         .multilineTextAlignment(.center)
     }
+    
     private func intField(
         value: Binding<Int?>,
-        placeholder: String,
+        placeholder: String
     ) -> some View {
         TextField(
             placeholder,
-            value: Binding(
-                get: { value.wrappedValue ?? 0 },
-                set: { value.wrappedValue = $0 }
-            ),
-            format: .number
+            text: Binding(
+                get: {
+                    guard let value = value.wrappedValue else { return "" }
+                    return value == 0 ? "" : String(value)
+                },
+                set: { newValue in
+                    if newValue.isEmpty {
+                        value.wrappedValue = nil
+                    } else {
+                        value.wrappedValue = Int(newValue)
+                    }
+                }
+            )
         )
         .keyboardType(.numberPad)
         .frame(width: 50)
         .multilineTextAlignment(.center)
     }
 }
+
+#Preview {
+    VStack{
+        Spacer()
+        TrackedExerciseView(trackedExercise: .constant(TrackedExercise(id: "", workoutId: "", exercise: MockData.exercises[0], restTime: 90, sets: MockData.sets)), onExerciseRemove: {_ in}) { _ in} onDone: { _ in }
+        Spacer()
+    }.background(Color.custom.background)
+        .preferredColorScheme(.dark)
+}
+
+
+

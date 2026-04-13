@@ -11,11 +11,12 @@ struct AddExerciseView: View {
     @Environment(\.dismiss) var dismiss
     @State var  selectedExercises: [Exercise] = []
     
+    let type: ShowExerciseListType
     let exercises: [Exercise]
     var onDismiss: ([Exercise]) -> Void
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             ZStack {
                 HStack {
                     Button("Cancel") {
@@ -29,15 +30,22 @@ struct AddExerciseView: View {
                 Text("Add Exercise")
                     .font(.custom.bodyMedium())
                     .foregroundStyle(Color.custom.text)
-            }.font(.custom.body())
-                .padding(.top, 10)
+            }.padding()
+            .font(.custom.body())
+                .background(Color.custom.darkerBackground)
             ZStack(alignment: .bottom) {
                 ScrollView(showsIndicators: false) {
                     LazyVStack {
                         ForEach(exercises, id: \.self) { exercise in
                             exerciseCell(for: exercise)
                                 .onTapGesture {
-                                    seleteToggle(exercise: exercise)
+                                    switch type {
+                                    case .add:
+                                        seleteToggle(exercise: exercise)
+                                    case .replace(_):
+                                        onDismiss([exercise])
+                                        dismiss()
+                                    }
                                 }
                         }
                     }
@@ -49,8 +57,8 @@ struct AddExerciseView: View {
                         dismiss()
                     }.customButtonStyle(.primary)
                 }
-            }
-        }.padding(.horizontal)
+            }.padding(.horizontal)
+        }
         .background(Color.custom.background)
     }
 }
@@ -77,7 +85,8 @@ extension AddExerciseView {
                         .font(.custom.bodyMedium())
                     Text(
                         exercise.primaryMuscleGroup.displayName +
-                        ", " + exercise.otherMuscleGroup.displayName
+                        " | " + exercise.exerciseType.displayName +
+                        " | " + exercise.equipment.displayName
                     ).foregroundStyle(Color.custom.tertiary)
                         .font(.custom.subheadline())
                 }
@@ -103,5 +112,5 @@ extension AddExerciseView {
 }
 
 #Preview {
-    AddExerciseView(exercises: MockData.exercises, onDismiss: { _ in }).preferredColorScheme(.dark)
+    AddExerciseView(type: .add, exercises: MockData.exercises, onDismiss: { _ in }).preferredColorScheme(.dark)
 }

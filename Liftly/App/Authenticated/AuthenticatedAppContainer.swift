@@ -52,7 +52,7 @@ final class AuthenticatedAppContainer {
     
     @MainActor
     private func makeActiveWorkoutViewModel(routineId: String?) -> ActiveWorkoutViewModel {
-        ActiveWorkoutViewModel(routineId: routineId, createPostUseCase: createPostUseCase, getExercisesUseCase: getExercisesUseCase)
+        ActiveWorkoutViewModel(currentUserId: currentUserId, routineId: routineId, createPostUseCase: createPostUseCase, getExercisesUseCase: getExercisesUseCase)
     }
     
     @MainActor
