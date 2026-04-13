@@ -5,6 +5,7 @@
 //  Created by Natanael Jop on 13/04/2026.
 //
 
+import SwiftUI
 
 struct PostEntry {
     var id: String

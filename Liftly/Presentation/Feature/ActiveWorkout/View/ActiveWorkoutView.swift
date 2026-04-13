@@ -27,29 +27,12 @@ struct ActiveWorkoutView: View {
     var body: some View {
         ZStack(alignment: .bottom) {
             VStack(spacing: 0) {
-                ZStack {
-                    HStack {
-                        Button {
-                            navigate(.unwind(nil))
-                        } label: {
-                            Image(systemName: "chevron.left")
-                        }
-                        Spacer()
-                        Button("Finish") {
-                            showSaveWorkoutView.toggle()
-                        }.customButtonStyle(.primary)
-                            .frame(width: 80)
-                    }
-                    Text("Log Workout")
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 10)
-                .background(Color.custom.darkerBackground)
+                header
                 VStack(spacing: 16) {
                     Divider()
                     HStack {
                         TimelineView(.periodic(from: .now, by: 1)) { _ in
-                            statCell("Duration", "\(viewModel.duration.format())")
+                            statCell("Duration", "\(viewModel.duration.formatIntoTime())")
                         }
                         statCell("Volume", "\(viewModel.totalVolume)kg")
                         statCell("Sets", "\(viewModel.totalSets)")
@@ -82,56 +65,7 @@ struct ActiveWorkoutView: View {
                 }
             }
             if viewModel.isRestRunning {
-                VStack {
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            Rectangle()
-                                .fill(Color.custom.secondary.opacity(0.2))
-                            
-                            Rectangle()
-                                .fill(Color.custom.primary)
-                                .frame(width: geo.size.width * progress)
-                                .animation(.linear(duration: 1), value: progress)
-                        }
-                    }
-                    .frame(height: 6)
-                    
-                    HStack {
-                        Spacer()
-                        
-                        Button("-15") {
-                            viewModel.subtractRestTime(15)
-                        }
-                        .frame(width: 70)
-                        .customButtonStyle(.secondary)
-                        
-                        Spacer()
-                        
-                        TimelineView(.periodic(from: .now, by: 1)) { _ in
-                            Text(viewModel.restTime.format())
-                                .font(.custom.title())
-                                .monospacedDigit()
-                        }
-                        
-                        Spacer()
-                        
-                        Button("+15") {
-                            viewModel.addRestTime(15)
-                        }
-                        .frame(width: 70)
-                        .customButtonStyle(.secondary)
-                        
-                        Button("Skip") {
-                            viewModel.stopRestTimer()
-                        }
-                        .frame(width: 70)
-                        .customButtonStyle(.primary)
-                        
-                        Spacer()
-                    }
-                }.transition(.move(edge: .bottom).combined(with: .opacity))
-                    .background(Color.custom.darkerBackground)
-                
+                timer
             }
         }.task {
             await viewModel.startWorkout()
@@ -167,6 +101,27 @@ struct ActiveWorkoutView: View {
 }
 
 extension ActiveWorkoutView {
+    private var header: some View {
+        ZStack {
+            HStack {
+                Button {
+                    navigate(.unwind(nil))
+                } label: {
+                    Image(systemName: "chevron.left")
+                }
+                Spacer()
+                Button("Finish") {
+                    showSaveWorkoutView.toggle()
+                }.customButtonStyle(.primary)
+                    .frame(width: 80)
+            }
+            Text("Log Workout")
+        }
+        .padding(.horizontal)
+        .padding(.bottom, 10)
+        .background(Color.custom.darkerBackground)
+    }
+    
     private func statCell(_ title: String, _ value: String) -> some View {
         HStack {
             Spacer()
@@ -214,21 +169,61 @@ extension ActiveWorkoutView {
             }
         }
     }
-}
+    
+    private var timer: some View {
+        VStack {
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Rectangle()
+                        .fill(Color.custom.secondary.opacity(0.2))
+                    
+                    Rectangle()
+                        .fill(Color.custom.primary)
+                        .frame(width: geo.size.width * progress)
+                        .animation(.linear(duration: 1), value: progress)
+                }
+            }
+            .frame(height: 6)
+            
+            HStack {
+                Spacer()
+                
+                Button("-15") {
+                    viewModel.subtractRestTime(15)
+                }
+                .frame(width: 70)
+                .customButtonStyle(.secondary)
+                
+                Spacer()
+                
+                TimelineView(.periodic(from: .now, by: 1)) { _ in
+                    Text(viewModel.restTime.formatIntoTime())
+                        .font(.custom.title())
+                        .monospacedDigit()
+                }
+                
+                Spacer()
+                
+                Button("+15") {
+                    viewModel.addRestTime(15)
+                }
+                .frame(width: 70)
+                .customButtonStyle(.secondary)
+                
+                Button("Skip") {
+                    viewModel.stopRestTimer()
+                }
+                .frame(width: 70)
+                .customButtonStyle(.primary)
+                
+                Spacer()
+            }
+        }.transition(.move(edge: .bottom).combined(with: .opacity))
+            .background(Color.custom.darkerBackground)
 
-extension Int {
-    func format() -> String {
-        let hours = self / 3600
-        let minutes = (self % 3600) / 60
-        let secs = self % 60
-        
-        if hours > 0 {
-            return String(format: "%02d:%02d:%02d", hours, minutes, secs)
-        } else {
-            return String(format: "%02d:%02d", minutes, secs)
-        }
     }
 }
+
 
 #Preview {
     ActiveWorkoutView(viewModel: ActiveWorkoutViewModel(currentUserId: "",routineId: "", createPostUseCase: MockCreatePostUseCase(), getExercisesUseCase: MockGetExercisesUseCase()))

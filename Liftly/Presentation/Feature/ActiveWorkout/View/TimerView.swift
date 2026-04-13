@@ -25,7 +25,7 @@ struct TimerView: View {
                         if num == 0 {
                             Text("off")
                         }else{
-                            Text(num.format())
+                            Text(num.formatIntoTime())
                         }
                     }.foregroundStyle(Color.custom.primary)
                         .font(.custom.title2())

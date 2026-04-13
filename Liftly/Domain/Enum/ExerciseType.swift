@@ -35,40 +35,7 @@ extension ExerciseType {
         case .other: return "Other"
         }
     }
-}
-
-extension ExerciseType {
-    func defaultValue() -> ExerciseValue {
-        switch self {
-
-        case .weightReps:
-            return .weightReps(weight: 0, reps: 0)
-
-        case .bodyweightReps:
-            return .bodyweightReps(reps: 0)
-
-        case .weightedBodyweight:
-            return .weightedBodyweight(weight: 0, reps: 0)
-
-        case .duration:
-            return .duration(seconds: 0)
-
-        case .durationWeight:
-            return .durationWeight(seconds: 0, weight: 0)
-
-        case .distanceDuration:
-            return .distanceDuration(distance: 0, seconds: 0)
-
-        case .weightDistance:
-            return .weightDistance(weight: 0, distance: 0)
-
-        case .other:
-            return .other("")
-        }
-    }
-}
-
-extension ExerciseType {
+    
     func configure(set: inout ExerciseSet) {
         switch self {
         case .weightReps:
@@ -93,9 +60,7 @@ extension ExerciseType {
             break
         }
     }
-}
-
-extension ExerciseType {
+    
     var usesWeight: Bool {
         switch self {
         case .weightReps, .durationWeight, .weightDistance:
