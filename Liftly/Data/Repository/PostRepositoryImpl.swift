@@ -39,15 +39,3 @@ final class PostRepositoryImpl: PostRepository, @unchecked Sendable {
         try await firestoreClient.setData(dto, for: PostEndpoint.self, id: .init(value: post.id), merge: true)
     }
 }
-
-
-struct PostEntry {
-    var id: String
-    var ownerId: String
-    var title: String
-    var description: String
-    var image: URL?
-    var likedUsersIds: [String]
-    var commentsIds: [String]
-    var workout: WorkoutEntry
-}

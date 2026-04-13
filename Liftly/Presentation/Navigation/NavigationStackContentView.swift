@@ -25,6 +25,7 @@ struct NavigationStackContentView: View {
                     case .workoutDetail: container.makeWorkoutDetailsView()
                     }
                 }
+                .rootRouter(path: $path)
         }
     }
 }

@@ -6,7 +6,7 @@
 //
 
 
-enum ExerciseValue: Codable, Sendable {
+enum ExerciseValue: Codable, Sendable, Hashable {
     case weightReps(weight: Double, reps: Int)
     case bodyweightReps(reps: Int)
     case weightedBodyweight(weight: Double, reps: Int)
