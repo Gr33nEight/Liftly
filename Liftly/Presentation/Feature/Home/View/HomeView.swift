@@ -59,21 +59,55 @@ struct PostCell: View {
             
         } .padding()
         
+        //statistics
         Text("Describe")
             .fontWeight(.bold)
         
-        HStack{
+        HStack (spacing: 25){
             VStack(alignment: .leading){
                 Text("Time")
+                    .font(.caption)
+                    .foregroundColor(.custom.tertiary)
+                Text("1h 30min")
+                    .font(.headline)
             }
             
             VStack(alignment: .leading) {
                 Text("Volume")
+                    .font(.caption)
+                    .foregroundColor(.custom.tertiary)
+                Text("3500kg")
+                    .font(.headline)
             }
             
             VStack(alignment:.leading) {
                 Text("Records")
+                    .font(.caption)
+                    .foregroundColor(.custom.tertiary)
+                
+                HStack(spacing: 4) {
+                    Image(systemName: "medal.fill")
+                        .foregroundColor(.yellow)
+                    Text("4")
+                }
             }
+            
+            VStack{
+                Text("Acg Bpm")
+                    .font(.caption)
+                    .foregroundColor(.custom.tertiary)
+                HStack(spacing: 4) {
+                    Image(systemName: "heart.fill")
+                        .foregroundColor(.red)
+                    Text("117")
+                }
+            }
+        }
+        
+        VStack(alignment: .leading){
+            let sampleExercise = [
+                Exercise(name: "Bench Press (Barbell)"), sets: 4, iconName: "figure.strengthtraining.traditional"
+            ]
         }
     }
 }
