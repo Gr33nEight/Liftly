@@ -7,11 +7,8 @@
 import SwiftUI
 
 struct Routine: Identifiable {
-    let id: UUID = UUID()
+    let id: String
     let title: String
-    let exercises: [Exercise]
-    
-    var exerciseTitles: [String] {
-        exercises.map(\.title)
-    }
+    let exercisesIds: [String]
+    let ownerId: String
 }

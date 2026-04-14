@@ -25,7 +25,7 @@ final class PostRepositoryImpl: PostRepository, @unchecked Sendable {
             batch.delete(for: WorkoutEndpoint.self, id: .init(value: post.workoutId))
             
             for exercise in trackedExercises {
-                batch.delete(for: ExerciseEndpoint.self, id: .init(value: exercise.id))
+                batch.delete(for: TrackedExerciseEndpoint.self, id: .init(value: exercise.id))
             }
         }
     }
@@ -57,10 +57,6 @@ final class PostRepositoryImpl: PostRepository, @unchecked Sendable {
     }
     
     func removeLikeToPost(with postId: String, userId: String) async throws {
-        
-    }
-    
-    func updatePostLikes(of postId: String, userId: String) async throws {
         try await firestoreClient.updateData(for: PostEndpoint.self, id: .init(value: postId), ["likedUsersIds" : .remove([userId])])
     }
 }

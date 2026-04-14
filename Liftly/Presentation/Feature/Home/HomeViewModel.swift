@@ -10,7 +10,7 @@ import Combine
 
 @MainActor
 final class HomeViewModel: ObservableObject {
-    @Published var posts: [Post] = []
+    @Published var posts: [PostEntry] = []
     
     private let currentUserId: String
     private let deletePostUseCase: DeletePostUseCase
@@ -46,8 +46,8 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
-    func toggleLike(_ post: Post) async {
-        guard let idx = posts.firstIndex(where: { $0.id == post.id }) else { return }
+    func toggleLike(_ id: String) async {
+        guard let idx = posts.firstIndex(where: { $0.id == id }) else { return }
 
         let toggledPost = posts[idx]
         
@@ -58,7 +58,7 @@ final class HomeViewModel: ObservableObject {
         }
         
         do {
-            try await toggleLikeUseCase.execute(post: post, userId: currentUserId)
+            try await toggleLikeUseCase.execute(post: toggledPost, userId: currentUserId)
         } catch {
             posts[idx] = toggledPost
             print("Error: \(error.localizedDescription)")
@@ -67,7 +67,6 @@ final class HomeViewModel: ObservableObject {
     
     private func fetchPosts() async {
         do {
-            print(currentUserId)
             posts = try await fetchPostsUseCase.execute(userId: currentUserId)
         } catch {
             print("Error: \(error.localizedDescription)")

@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+protocol StorageRepository {
+    func uploadImage(data: Data, path: StoragePath) async throws -> URL
+    func deleteImage(path: StoragePath) async throws
+}

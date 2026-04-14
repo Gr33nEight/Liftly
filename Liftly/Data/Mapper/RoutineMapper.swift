@@ -6,3 +6,37 @@
 //
 
 import Foundation
+
+enum RoutineMapper{
+    static func toDTO(_ domain: Routine) -> RoutineDTO {
+        return RoutineDTO(
+            id: domain.id,
+            title: domain.title,
+            exercisesIds: domain.exercisesIds,
+            ownerId: domain.ownerId
+        )
+    }
+    
+    static func toDomain(_ dto: RoutineDTO) throws -> Routine {
+        guard let id = dto.id else {
+            throw MapperError.missingId
+        }
+        
+        return Routine(
+            id: id,
+            title: dto.title,
+            exercisesIds: dto.exercisesIds,
+            ownerId: dto.ownerId
+        )
+    }
+    
+    static func toEntry(_ domain: Routine, exercises: [Exercise]) -> RoutineEntry {
+        return RoutineEntry(
+            id: domain.id,
+            title: domain.title,
+            exercises: exercises,
+            ownerId: domain.ownerId
+        )
+    }
+}
+    

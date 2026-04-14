@@ -8,23 +8,27 @@
 import Foundation
 
 enum ExerciseMapper {
-    static func toDTO(_ domain: TrackedExercise) -> ExerciseDTO {
-        return ExerciseDTO(
+    static func toDTO(_ domain: TrackedExercise) -> TrackedExerciseDTO {
+        return TrackedExerciseDTO(
             id: domain.id,
             workoutId: domain.workoutId,
-            title: domain.exercise.title,
-            image: mapImage(domain.exercise),
-            howTo: domain.exercise.howTo,
-            equipment: domain.exercise.equipment.rawValue,
-            primaryMuscleGroup: domain.exercise.primaryMuscleGroup.rawValue,
-            otherMuscleGroup: domain.exercise.otherMuscleGroup.rawValue,
-            exerciseType: domain.exercise.exerciseType.rawValue,
+            exerciseId: domain.exerciseId,
             restTime: domain.restTime,
-            sets: mapSetToDTO(domain)
+            sets: mapSetToDTO(domain.sets)
         )
     }
     
-    static func toDomain(_ dto: ExerciseDTO) throws -> TrackedExercise {
+    static func toDTO(_ entry: TrackedExerciseEntry) -> TrackedExerciseDTO {
+        return TrackedExerciseDTO(
+            id: entry.id,
+            workoutId: entry.workoutId,
+            exerciseId: entry.exercise.id,
+            restTime: entry.restTime,
+            sets: mapSetToDTO(entry.sets)
+        )
+    }
+    
+    static func toDomain(_ dto: TrackedExerciseDTO) throws -> TrackedExercise {
         guard let id = dto.id else {
             throw MapperError.missingId
         }
@@ -32,36 +36,17 @@ enum ExerciseMapper {
         return TrackedExercise(
             id: id,
             workoutId: dto.workoutId,
-            exercise: mapExercise(dto),
+            exerciseId: dto.exerciseId,
             restTime: dto.restTime,
-            sets: mapSetToDomain(dto)
+            sets: mapSetToDomain(dto.sets)
         )
     }
     
-    private static func mapImage(_ dto: ExerciseDTO) -> URL? {
-        return URL(string: dto.image)
+    private static func mapSetToDTO(_ sets: [ExerciseSet]) -> [ExerciseSetDTO] {
+        sets.map({ ExerciseSetMapper.toDTO($0) })
     }
     
-    private static func mapImage(_ domain: Exercise) -> String {
-        return domain.image?.absoluteString ?? ""
-    }
-    
-    private static func mapSetToDTO(_ domain: TrackedExercise) -> [ExerciseSetDTO] {
-        domain.sets.map({ ExerciseSetMapper.toDTO($0) })
-    }
-    
-    private static func mapSetToDomain(_ dto: ExerciseDTO) -> [ExerciseSet] {
-        dto.sets.map({ ExerciseSetMapper.toDomain($0) })
-    }
-    
-    private static func mapExercise(_ dto: ExerciseDTO) -> Exercise {
-        return Exercise(
-            title: dto.title,
-            howTo: dto.howTo,
-            equipment: Equipment(rawValue: dto.equipment) ?? .none,
-            primaryMuscleGroup: MuscleGroup(rawValue: dto.primaryMuscleGroup) ?? .other,
-            otherMuscleGroup: MuscleGroup(rawValue: dto.otherMuscleGroup) ?? .other,
-            exerciseType: ExerciseType(rawValue: dto.exerciseType) ?? .other
-        )
+    private static func mapSetToDomain(_ sets: [ExerciseSetDTO]) -> [ExerciseSet] {
+        sets.map({ ExerciseSetMapper.toDomain($0) })
     }
 }

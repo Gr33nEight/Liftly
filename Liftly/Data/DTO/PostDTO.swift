@@ -12,8 +12,10 @@ struct PostDTO: Codable, Sendable {
     @DocumentID var id: String?
     var ownerId: String
     var title: String
+    var dateCreated: Date
+    var isPublic: Bool
     var description: String?
-    var image: String
+    var image: String?
     var likedUsersIds: [String]
     var commentsIds: [String]
     var workoutId: String

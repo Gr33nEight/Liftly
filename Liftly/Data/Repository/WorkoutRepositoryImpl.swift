@@ -28,8 +28,8 @@ final class WorkoutRepositoryImpl: WorkoutRepository, @unchecked Sendable {
         try await firestoreClient.setData(dto, for: WorkoutEndpoint.self, id: .init(value: workout.id), merge: true)
     }
     
-    func fetchWorkouts(by ownersIds: [String]) async throws -> [Workout] {
-        let query = FirestoreQuery().isIn(.field("ownersIds"), ownersIds.map({ .string($0) }))
+    func fetchWorkouts(by ids: [String]) async throws -> [Workout] {
+        let query = FirestoreQuery().isIn(.documentId, ids.map({ .string($0) }))
         let results = try await firestoreClient.fetch(WorkoutEndpoint.self, query: query)
         return try results.map({ try WorkoutMapper.toDomain($0) })
     }

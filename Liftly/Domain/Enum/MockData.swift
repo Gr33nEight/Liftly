@@ -9,6 +9,7 @@
 enum MockData {
     static let exercises: [Exercise] = [
         Exercise(
+            id: "bench_press",
             title: "Bench Press",
             howTo: "Press the bar",
             equipment: .barbell,
@@ -17,6 +18,7 @@ enum MockData {
             exerciseType: .weightReps
         ),
         Exercise(
+            id: "pull_ups",
             title: "Pull Ups",
             howTo: "Pull yourself",
             equipment: .none,
@@ -43,5 +45,11 @@ enum MockData {
             weight: 10,
             reps: 12
         )
+    ]
+    
+    static let routines: [RoutineEntry] = [
+        RoutineEntry(id: "", title: "Test", exercises: MockData.exercises, ownerId: ""),
+        RoutineEntry(id: "", title: "Test2", exercises: MockData.exercises, ownerId: ""),
+        RoutineEntry(id: "", title: "Test3", exercises: MockData.exercises, ownerId: ""),
     ]
 }

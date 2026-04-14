@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+enum RoutineEndpoint: FirestoreEndpoint {
+    typealias DTO = RoutineDTO
+    static let path: String = "routines"
+}
