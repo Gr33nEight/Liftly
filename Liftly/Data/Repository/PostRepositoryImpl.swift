@@ -19,8 +19,15 @@ final class PostRepositoryImpl: PostRepository, @unchecked Sendable {
         try transaction.setData(dto, for: PostEndpoint.self, id: .init(value: entry.id))
     }
     
-    func deletePost(by id: String) async throws {
-        try await firestoreClient.delete(for: PostEndpoint.self, id: .init(value: id))
+    func deletePost(_ post: Post, trackedExercises: [TrackedExercise]) async throws {
+        try await firestoreClient.runBatch { batch in
+            batch.delete(for: PostEndpoint.self, id: .init(value: post.id))
+            batch.delete(for: WorkoutEndpoint.self, id: .init(value: post.workoutId))
+            
+            for exercise in trackedExercises {
+                batch.delete(for: ExerciseEndpoint.self, id: .init(value: exercise.id))
+            }
+        }
     }
     
     func listenToPost(by id: String) -> AsyncThrowingStream<Post, Error>{
@@ -34,8 +41,26 @@ final class PostRepositoryImpl: PostRepository, @unchecked Sendable {
         return PostMapper.toStream(stream)
     }
     
+    func fetchPosts(by ownersIds: [String]) async throws -> [Post] {
+        let query = FirestoreQuery().isIn(.field("ownerId"), ownersIds.map({ .string($0) }))
+        let dtos = try await firestoreClient.fetch(PostEndpoint.self, query: query)
+        return try dtos.map { try PostMapper.toDomain($0) }
+    }
+    
     func updatePost(post: Post) async throws {
         let dto = PostMapper.toDTO(post)
         try await firestoreClient.setData(dto, for: PostEndpoint.self, id: .init(value: post.id), merge: true)
+    }
+    
+    func addLikeToPost(with postId: String, userId: String) async throws {
+        try await firestoreClient.updateData(for: PostEndpoint.self, id: .init(value: postId), ["likedUsersIds" : .union([userId])])
+    }
+    
+    func removeLikeToPost(with postId: String, userId: String) async throws {
+        
+    }
+    
+    func updatePostLikes(of postId: String, userId: String) async throws {
+        try await firestoreClient.updateData(for: PostEndpoint.self, id: .init(value: postId), ["likedUsersIds" : .remove([userId])])
     }
 }

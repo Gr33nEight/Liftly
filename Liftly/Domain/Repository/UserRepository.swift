@@ -11,4 +11,6 @@ protocol UserRepository {
     func createUser(user: User) async throws
     func deleteUser(userId: String) async throws
     func listenToUser(userId: String) -> AsyncThrowingStream<User, Error>
+    func fetchUsers(by userIds: [String]) async throws -> [User]
+    func fetchUser(by userId: String) async throws -> User
 }

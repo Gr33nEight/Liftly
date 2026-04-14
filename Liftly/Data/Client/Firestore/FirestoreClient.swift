@@ -36,6 +36,15 @@ protocol FirestoreClient {
         id: FirestoreDocumentID,
     ) async throws
     
+    func batchDelete<E: FirestoreEndpoint>(
+        _ endpoint: E.Type,
+        query: FirestoreQuery
+    ) async throws
+    
+    func runBatch(
+        _ block: (FirestoreBatch) -> Void
+    ) async throws
+    
     func listen<E: FirestoreEndpoint>(
         _ endpoint: E.Type,
         query: FirestoreQuery

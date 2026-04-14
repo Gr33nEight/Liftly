@@ -36,7 +36,7 @@ final class SignUpUseCaseImpl: SignUpUseCase {
         let user = User(
             id: session.uid,
             name: name,
-            email: email
+            email: email,
         )
         try await userRepository.createUser(user: user)
     }

@@ -26,6 +26,9 @@ final class AuthenticatedAppContainer {
     lazy private var getExercisesUseCase: GetExercisesUseCase = GetExercisesUseCaseImpl(exerciseRepository: exerciseRepository)
     lazy private var createPostUseCase: CreatePostUseCase =
         CreatePostUseCaseImpl(transactionProvider: transactionProvider, trackedExerciseRepo: trakcedExerciseRepository, workoutRepo: workoutRepository, postRepo: postRepository)
+    lazy private var deletePostUseCase: DeletePostUseCase = DeletePostUseCaseImpl(postRepository: postRepository, trackedExerciseRepository: trakcedExerciseRepository)
+    lazy private var fetchPostsUseCase: FetchPostsUseCase = FetchPostsUseCaseImpl(postRepository: postRepository, userRepository: userRepository)
+    lazy private var toggleLikeUseCase: ToggleLikeUseCase = ToggleLikeUseCaseImpl(postRepository: postRepository)
     
     let currentUserId: String
     
@@ -42,7 +45,12 @@ final class AuthenticatedAppContainer {
     
     @MainActor
     private func makeHomeViewModel() -> HomeViewModel {
-        HomeViewModel()
+        HomeViewModel(
+            currentUserId: currentUserId,
+            deletePostUseCase: deletePostUseCase,
+            fetchPostsUseCase: fetchPostsUseCase,
+            toggleLikeUseCase: toggleLikeUseCase
+        )
     }
     
     @MainActor
