@@ -8,16 +8,10 @@
 import Foundation
 @preconcurrency import FirebaseFirestore
 
-struct ExerciseDTO: Codable, Sendable {
+struct TrackedExerciseDTO: Codable, Sendable {
     @DocumentID var id: String?
     var workoutId: String
-    var title: String
-    var image: String
-    var howTo: String
-    var equipment: Int
-    var primaryMuscleGroup: Int
-    var otherMuscleGroup: Int
-    var exerciseType: Int
+    var exerciseId: String
     var restTime: Int
     var sets: [ExerciseSetDTO]
 }

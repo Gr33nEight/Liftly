@@ -11,5 +11,5 @@ struct WorkoutEntry {
     var duration: Int
     var volume: Double
     var sets: Int
-    var exercises: [TrackedExercise]
+    var trackedExercises: [TrackedExerciseEntry]
 }

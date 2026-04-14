@@ -7,9 +7,6 @@
 import SwiftUI
 
 final actor ExerciseStorage {
-    
-    static let shared = ExerciseStorage()
-    
     private var cache: [Exercise] = []
     
     func load() -> [Exercise] {

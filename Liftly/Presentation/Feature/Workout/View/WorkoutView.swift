@@ -72,11 +72,11 @@ extension WorkoutView {
     
     private var myRoutinesView: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("MY ROUTINES (3)")
+            Text("MY ROUTINES (\(viewModel.routines.count))")
                 .font(.custom.bodyMedium())
                 .foregroundStyle(Color.custom.tertiary)
             
-            ForEach(viewModel.routines) { routine in
+            ForEach(viewModel.routines, id:\.id) { routine in
                 RoutineCellView(routine: routine)
             }
         }
@@ -84,6 +84,6 @@ extension WorkoutView {
 }
 
 #Preview {
-    WorkoutView(viewModel: WorkoutViewModel(getExercisesUseCase: MockGetExercisesUseCase()))
-        .preferredColorScheme(.dark)
+//    WorkoutView(viewModel: WorkoutViewModel(getExercisesUseCase: MockGetExercisesUseCase()))
+//        .preferredColorScheme(.dark)
 }

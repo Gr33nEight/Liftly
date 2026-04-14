@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TimerView: View {
     @Environment(\.dismiss) var dismiss
-    @Binding var trackedExercise: TrackedExercise
+    @Binding var trackedExercise: TrackedExerciseEntry
     let numbers = Array(stride(from: 0, through: 300, by: 5))
     var body: some View {
         VStack(spacing: 8) {
@@ -43,5 +43,5 @@ struct TimerView: View {
 }
 
 #Preview {
-    TimerView(trackedExercise: .constant(TrackedExercise(id: "", workoutId: "", exercise: MockData.exercises[0], restTime: 90, sets: []))).preferredColorScheme(.dark)
+//    TimerView(trackedExercise: .constant(TrackedExercise(id: "", workoutId: "", exercise: MockData.exercises[0], restTime: 90, sets: []))).preferredColorScheme(.dark)
 }

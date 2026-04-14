@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct TrackedExerciseView: View {
-    @Binding var trackedExercise: TrackedExercise
+    @Binding var trackedExercise: TrackedExerciseEntry
     @State private var showTimerModal: Bool = false
     
     var onExerciseRemove: (String) -> Void
@@ -225,12 +225,12 @@ extension TrackedExerciseView {
 }
 
 #Preview {
-    VStack{
-        Spacer()
-        TrackedExerciseView(trackedExercise: .constant(TrackedExercise(id: "", workoutId: "", exercise: MockData.exercises[0], restTime: 90, sets: MockData.sets)), onExerciseRemove: {_ in}) { _ in} onDone: { _ in }
-        Spacer()
-    }.background(Color.custom.background)
-        .preferredColorScheme(.dark)
+//    VStack{
+//        Spacer()
+//        TrackedExerciseView(trackedExercise: .constant(TrackedExercise(id: "", workoutId: "", exercise: MockData.exercises[0], restTime: 90, sets: MockData.sets)), onExerciseRemove: {_ in}) { _ in} onDone: { _ in }
+//        Spacer()
+//    }.background(Color.custom.background)
+//        .preferredColorScheme(.dark)
 }
 
 

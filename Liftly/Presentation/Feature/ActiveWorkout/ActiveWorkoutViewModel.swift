@@ -18,7 +18,7 @@ final class ActiveWorkoutViewModel: ObservableObject {
         return Int(Date().timeIntervalSince(startDate))
     }
     
-    @Published var trackedExercises: [TrackedExercise] = []
+    @Published var trackedExercises: [TrackedExerciseEntry] = []
     @Published var exercises: [Exercise] = []
     
     @Published var restTime: Int = 0
@@ -30,8 +30,10 @@ final class ActiveWorkoutViewModel: ObservableObject {
     private var activeWorkoutId: String = UUID().uuidString
     
     private let currentUserId: String
+    private let routineId: String?
     private let createPostUseCase: CreatePostUseCase
     private let getExercisesUseCase: GetExercisesUseCase
+    private let getRoutineUseCase: GetRoutineUseCase
     
     var totalSets: Int {
         trackedExercises
@@ -51,17 +53,33 @@ final class ActiveWorkoutViewModel: ObservableObject {
         currentUserId: String,
         routineId: String?,
         createPostUseCase: CreatePostUseCase,
-        getExercisesUseCase: GetExercisesUseCase
+        getExercisesUseCase: GetExercisesUseCase,
+        getRoutineUseCase: GetRoutineUseCase
     ) {
         self.currentUserId = currentUserId
+        self.routineId = routineId
         self.exercises = MockData.exercises
         self.createPostUseCase = createPostUseCase
         self.getExercisesUseCase = getExercisesUseCase
+        self.getRoutineUseCase = getRoutineUseCase
     }
     
     func startWorkout() async {
         startDate = Date()
         await getExercises()
+        
+        if let routineId {
+            await self.startRoutine(routineId: routineId)
+        }
+    }
+    
+    func startRoutine(routineId: String) async {
+        do {
+            let routine = try await getRoutineUseCase.execute(routineId: routineId)
+            self.addTrackedExercises(for: routine.exercises)
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
     }
     
     func buildPost(title: String, description: String?, date: Date, isPublic: Bool) -> PostEntry {
@@ -70,7 +88,7 @@ final class ActiveWorkoutViewModel: ObservableObject {
             duration: duration,
             volume: totalVolume,
             sets: totalSets,
-            exercises: trackedExercises
+            trackedExercises: trackedExercises
         )
         
         return PostEntry(
@@ -79,7 +97,6 @@ final class ActiveWorkoutViewModel: ObservableObject {
             title: title,
             dateCreated: date,
             description: description,
-            image: nil,
             isPublic: isPublic,
             likedUsersIds: [],
             commentsIds: [],
@@ -87,11 +104,11 @@ final class ActiveWorkoutViewModel: ObservableObject {
         )
     }
     
-    func savePost(title: String, description: String?, date: Date, isPublic: Bool) async {
+    func savePost(title: String, description: String?, date: Date, isPublic: Bool, image: Data?) async {
         let entry = self.buildPost(title: title, description: description, date: date, isPublic: isPublic)
         
         do {
-            try await createPostUseCase.execute(entry: entry)
+            try await createPostUseCase.execute(entry: entry, image: image)
         } catch {
             print("Error: \(error.localizedDescription)")
         }
@@ -100,7 +117,7 @@ final class ActiveWorkoutViewModel: ObservableObject {
     func addTrackedExercises(for exercises: [Exercise]) {
         exercises.forEach { exercise in
             trackedExercises.append(
-                TrackedExercise(
+                TrackedExerciseEntry(
                     id: UUID().uuidString,
                     workoutId: activeWorkoutId,
                     exercise: exercise,

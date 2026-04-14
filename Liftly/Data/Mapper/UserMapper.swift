@@ -13,7 +13,9 @@ enum UserMapper{
         return UserDTO(
             id: domain.id,
             name: domain.name,
-            email: domain.email
+            email: domain.email,
+            followersIds: domain.followersIds,
+            followingIds: domain.followingIds
         )
     }
     
@@ -25,7 +27,9 @@ enum UserMapper{
         return User(
             id: id,
             name: dto.name,
-            email: dto.email
+            email: dto.email,
+            followersIds: dto.followersIds,
+            followingIds: dto.followingIds
         )
     }
     

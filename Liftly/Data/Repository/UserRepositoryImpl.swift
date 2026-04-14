@@ -28,6 +28,17 @@ final class UserRepositoryImpl: UserRepository {
         let stream = firestoreClient.listenDocument(UserEndpoint.self, id: .init(value: userId))
         return UserMapper.toStream(stream)
     }
+    
+    func fetchUsers(by userIds: [String]) async throws -> [User] {
+        let query = FirestoreQuery().isIn(.documentId, userIds.map({.string($0)}))
+        let dtos = try await firestoreClient.fetch(UserEndpoint.self, query: query)
+        return try dtos.map({ try UserMapper.toDomain($0) })
+    }
+    
+    func fetchUser(by userId: String) async throws -> User {
+        let dto = try await firestoreClient.fetchDocument(UserEndpoint.self, id: .init(value: userId))
+        return try UserMapper.toDomain(dto)
+    }
 }
 
 enum UserError: Error {

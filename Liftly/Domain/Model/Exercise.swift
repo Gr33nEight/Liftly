@@ -8,6 +8,7 @@
 import Foundation
 
 struct Exercise: Codable, Sendable, Hashable {
+    var id: String
     var title: String
     var image: URL?
     var howTo: String
@@ -19,6 +20,6 @@ struct Exercise: Codable, Sendable, Hashable {
 
 extension Exercise {
     static var empty: Exercise {
-        Exercise(title: "", howTo: "", equipment: .none, primaryMuscleGroup: .other, otherMuscleGroup: .other, exerciseType: .other)
+        Exercise(id: "", title: "", howTo: "", equipment: .none, primaryMuscleGroup: .other, otherMuscleGroup: .other, exerciseType: .other)
     }
 }
