@@ -75,11 +75,12 @@ extension WorkoutView {
             Text("MY ROUTINES (\(viewModel.routines.count))")
                 .font(.custom.bodyMedium())
                 .foregroundStyle(Color.custom.tertiary)
+                .frame(maxWidth: .infinity, alignment: .leading)
             
             ForEach(viewModel.routines, id:\.id) { routine in
                 RoutineCellView(routine: routine)
             }
-        }
+        }.frame(maxWidth: .infinity)
     }
 }
 

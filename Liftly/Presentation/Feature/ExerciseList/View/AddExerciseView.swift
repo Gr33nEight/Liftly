@@ -6,9 +6,11 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct AddExerciseView: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.navigate) var navigate
     
     @State private var selectedExercises: [Exercise] = []
     @State private var searchText: String = ""
@@ -18,61 +20,71 @@ struct AddExerciseView: View {
     var onDismiss: ([Exercise]) -> Void
     
     var body: some View {
-        VStack(spacing: 0) {
-            
-            // HEADER
-            ZStack {
-                HStack {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    Spacer()
-                }
-                Text("Add Exercise")
-                    .font(.custom.bodyMedium())
-                    .foregroundStyle(Color.custom.text)
-            }
-            .padding()
-            .background(Color.custom.darkerBackground)
-            
-            // SEARCH BAR
-            searchBar
-                .padding(.horizontal)
-                .padding(.top, 8)
-            
-            // LIST
-            ZStack(alignment: .bottom) {
-                ScrollView(showsIndicators: false) {
-                    LazyVStack {
-                        ForEach(filteredExercises, id: \.id) { exercise in
-                            exerciseCell(for: exercise)
-                                .onTapGesture {
-                                    switch type {
-                                    case .add:
-                                        toggle(exercise)
-                                    case .replace(_):
-                                        onDismiss([exercise])
-                                        dismiss()
-                                    }
-                                }
-                        }
-                    }
-                    .padding(.top)
-                }
+        NavigationStack {
+            VStack(spacing: 0) {
                 
-                // ADD BUTTON
-                if !selectedExercises.isEmpty {
-                    Button("Add \(selectedExercises.count) Exercise\(selectedExercises.count == 1 ? "" : "s")") {
-                        onDismiss(selectedExercises)
-                        dismiss()
+                // HEADER
+                ZStack {
+                    HStack {
+                        Button("Cancel") {
+                            dismiss()
+                        }
+                        Spacer()
                     }
-                    .customButtonStyle(.primary)
-                    .padding(.bottom)
+                    Text("Add Exercise")
+                        .font(.custom.bodyMedium())
+                        .foregroundStyle(Color.custom.text)
                 }
+                .padding()
+                .background(Color.custom.darkerBackground)
+                
+                // SEARCH BAR
+                searchBar
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                
+                // LIST
+                ZStack(alignment: .bottom) {
+                    ScrollView(showsIndicators: false) {
+                        LazyVStack {
+                            ForEach(filteredExercises, id: \.id) { exercise in
+                                exerciseCell(for: exercise)
+                                    .onTapGesture {
+                                        switch type {
+                                        case .add:
+                                            toggle(exercise)
+                                        case .replace(_):
+                                            onDismiss([exercise])
+                                            dismiss()
+                                        }
+                                    }
+                            }
+                        }
+                        .padding(.top)
+                    }
+                    
+                    // ADD BUTTON
+                    if !selectedExercises.isEmpty {
+                        Button("Add \(selectedExercises.count) Exercise\(selectedExercises.count == 1 ? "" : "s")") {
+                            onDismiss(selectedExercises)
+                            dismiss()
+                        }
+                        .customButtonStyle(.primary)
+                        .padding(.bottom)
+                    }
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .background(Color.custom.background)
+            .onAppear {
+                let urls = exercises
+                    .prefix(30)
+                    .compactMap { $0.imageUrl }
+                
+                ImagePrefetcher(urls: urls).start()
+            }
+
         }
-        .background(Color.custom.background)
     }
 }
 
@@ -93,9 +105,18 @@ extension AddExerciseView {
                 
                 ZStack {
                     Color.custom.tertiary.opacity(0.5)
-                    Text("🏋")
-                        .font(.title)
-                        .shadow(radius: 5)
+
+                    if let url = exercise.imageUrl {
+                        KFImage(url)
+                            .setProcessor(DownsamplingImageProcessor(size: CGSize(width: 60, height: 60)))
+                            .cacheOriginalImage()
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        Image("AppIcon")
+                            .resizable()
+                            .scaledToFit()
+                    }
                 }
                 .frame(width: 60, height: 60)
                 .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -115,10 +136,13 @@ extension AddExerciseView {
                 
                 Spacer()
                 
-                Button(action: {}) {
-                    Image(systemName: "chart.line.uptrend.xyaxis.circle")
+                NavigationLink {
+                    ExerciseDetailsView(exercise: exercise)
+                } label: {
+                    Image(systemName: "info.circle")
                         .font(.title)
                 }
+
             }
             Divider()
         }

@@ -219,6 +219,7 @@ extension ActiveWorkoutView {
                 Spacer()
             }
         }.transition(.move(edge: .bottom).combined(with: .opacity))
+            .padding(.bottom, 5)
             .background(Color.custom.darkerBackground)
 
     }
