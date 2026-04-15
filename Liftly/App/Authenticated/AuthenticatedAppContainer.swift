@@ -22,7 +22,7 @@ final class AuthenticatedAppContainer {
     lazy private var userRepository: UserRepository = UserRepositoryImpl(firestoreClient: firestoreClient)
     lazy private var workoutRepository: WorkoutRepository = WorkoutRepositoryImpl(firestoreClient: firestoreClient)
     lazy private var transactionProvider: TransactionProvider =
-        FirestoreTransactionProvider(client: firestoreClient)
+    FirestoreTransactionProvider(client: firestoreClient)
     lazy private var routineRepository: RoutineRepository = RoutineRepositoryImpl(firestoreClient: firestoreClient)
     
     lazy private var signOutUseCase: SignOutUseCase = SignOutUseCaseImpl(authRepository: authRepository)
@@ -39,6 +39,11 @@ final class AuthenticatedAppContainer {
     
     init(currentUserId: String) {
         self.currentUserId = currentUserId
+    }
+    
+    @MainActor
+    func makeAuthenticatedAppViewModel() -> AuthenticatedAppViewModel {
+        AuthenticatedAppViewModel(getExercisesUseCase: getExercisesUseCase)
     }
     
     @MainActor

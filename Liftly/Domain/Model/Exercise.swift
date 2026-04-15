@@ -10,7 +10,8 @@ import Foundation
 struct Exercise: Codable, Sendable, Hashable {
     var id: String
     var title: String
-    var image: URL?
+    var imageUrl: URL?
+    var videoUrl: URL?
     var howTo: String
     var equipment: Equipment
     var primaryMuscleGroup: MuscleGroup

@@ -17,9 +17,19 @@ enum ExerciseType: Int, CaseIterable, Codable {
     case other
     
     init(from decoder: Decoder) throws {
-       let raw = try decoder.singleValueContainer().decode(Int.self)
-       self = ExerciseType(rawValue: raw) ?? .other
-   }
+        let container = try decoder.singleValueContainer()
+        
+        if container.decodeNil() {
+            self = .other
+            return
+        }
+        
+        if let raw = try? container.decode(Int.self) {
+            self = ExerciseType(rawValue: raw) ?? .other
+        } else {
+            self = .other
+        }
+    }
 }
 
 extension ExerciseType {
