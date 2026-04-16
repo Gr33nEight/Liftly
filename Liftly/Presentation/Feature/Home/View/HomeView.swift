@@ -9,6 +9,10 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
+    
+    @State private var selectedTab: TabDestination = .home
+    let appContainer = AuthenticatedAppContainer(currentUserId: "person");
+    
     var body: some View {
         VStack {
             HStack {
@@ -23,12 +27,16 @@ struct HomeView: View {
                     Image(systemName: "bell")
                 }
             }.padding(20)
+            
             ScrollView{
                 ForEach (1..<2, id: \.self){ _ in
                     PostCell()
                 }
             }
             
+            NavigationBarContentView(
+                selected: $selectedTab, container: appContainer
+            )
         }
     }
 }
@@ -102,12 +110,6 @@ struct PostCell: View {
                     Text("117")
                 }
             }
-        }
-        
-        VStack(alignment: .leading){
-            let sampleExercise = [
-                Exercise(name: "Bench Press (Barbell)"), sets: 4, iconName: "figure.strengthtraining.traditional"
-            ]
         }
     }
 }
