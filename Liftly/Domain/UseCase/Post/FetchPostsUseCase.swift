@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FetchPostsUseCase {
-    func execute(userId: String) async throws -> [PostEntry]
+    func execute(userId: String) async throws -> [PostDetails]
 }
 
 final class FetchPostsUseCaseImpl: FetchPostsUseCase {
@@ -32,7 +32,7 @@ final class FetchPostsUseCaseImpl: FetchPostsUseCase {
         self.exerciseRepository = exerciseRepository
     }
     
-    func execute(userId: String) async throws -> [PostEntry] {
+    func execute(userId: String) async throws -> [PostDetails] {
         let user = try await userRepository.fetchUser(by: userId)
         let allIds = user.followingIds + [userId]
         let posts = try await postRepository.fetchPosts(by: allIds)
@@ -40,12 +40,14 @@ final class FetchPostsUseCaseImpl: FetchPostsUseCase {
         let exercises = await exerciseRepository.getAll()
         let exercisesDict = Dictionary(uniqueKeysWithValues: exercises.map { ($0.id, $0) })
         
-        return try await withThrowingTaskGroup(of: PostEntry.self) { group in
+        return try await withThrowingTaskGroup(of: PostDetails.self) { group in
             
             for post in posts {
-                group.addTask { [workoutRepository, trackedExerciseRepository] in
+                group.addTask { [workoutRepository, trackedExerciseRepository, userRepository] in
                     let workout = try await workoutRepository.fetchWorkout(by: post.workoutId)
+                    let owner = try await userRepository.fetchUser(by: post.ownerId)
                     let trackedExercises = try await trackedExerciseRepository.fetchExercises(by: workout.id)
+                    let likedUsers = try await userRepository.fetchUsers(by: post.likedUsersIds)
                     
                     let trackedEntries: [TrackedExerciseEntry] = trackedExercises.compactMap { tracked in
                         guard let exercise = exercisesDict[tracked.exerciseId] else { return nil }
@@ -66,22 +68,12 @@ final class FetchPostsUseCaseImpl: FetchPostsUseCase {
                         sets: workout.sets,
                         trackedExercises: trackedEntries
                     )
-                    
-                    return PostEntry(
-                        id: post.id,
-                        ownerId: post.ownerId,
-                        title: post.title,
-                        dateCreated: post.dateCreated,
-                        image: post.image,
-                        isPublic: post.isPublic,
-                        likedUsersIds: post.likedUsersIds,
-                        commentsIds: post.commentsIds,
-                        workout: workoutEntry
-                    )
+                    // TODO: Fetch Comment
+                    return PostMapper.toPostDetails(post, owner: owner, likedUsers: likedUsers, comments: [], workout: workoutEntry)
                 }
             }
         
-            var result: [PostEntry] = []
+            var result: [PostDetails] = []
             for try await entry in group {
                 result.append(entry)
             }

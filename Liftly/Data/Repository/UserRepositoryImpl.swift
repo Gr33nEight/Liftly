@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class UserRepositoryImpl: UserRepository {
+final class UserRepositoryImpl: UserRepository, @unchecked Sendable {
     private let firestoreClient: FirestoreClient
     
     init(firestoreClient: FirestoreClient) {

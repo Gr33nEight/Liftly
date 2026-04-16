@@ -58,15 +58,15 @@ struct SaveWorkoutView: View {
                 VStack(spacing: 20) {
                     titleTextField
                     HStack {
-                        statCell("Duration", "\(viewModel.duration.formatIntoTime())")
-                        statCell("Volume", "\(viewModel.totalVolume)kg")
-                        statCell("Sets", "\(viewModel.totalSets)")
+                        StatCell(title: "Duration", value: "\(viewModel.duration.formatIntoTime())", alignment: .leading)
+                        StatCell(title: "Volume", value: "\(viewModel.totalVolume)kg", alignment: .leading)
+                        StatCell(title: "Sets", value: "\(viewModel.totalSets)", alignment: .leading)
                     }
                     Divider()
                     Button(action: {
                         showDatePicker.toggle()
                     }) {
-                        statCell("When", date.formatted(date: .abbreviated, time: .shortened))
+                        StatCell(title: "When", value: date.formatted(date: .abbreviated, time: .shortened), alignment: .leading)
                     }
                     Divider()
                     addImageCell
@@ -195,20 +195,6 @@ extension SaveWorkoutView {
                 .customButtonStyle(.primary)
         }
         .presentationDetents([.fraction(0.4)])
-    }
-    
-    private func statCell(_ title: String, _ value: String) -> some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(title)
-                    .font(.custom.footnote())
-                    .foregroundStyle(Color.custom.tertiary)
-                Text(value)
-                    .font(.custom.bodyMedium())
-                    .foregroundStyle(Color.custom.secondary)
-            }
-            Spacer()
-        }
     }
     
     private func loadImage(from item: PhotosPickerItem?) async {

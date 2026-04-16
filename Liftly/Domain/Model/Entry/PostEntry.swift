@@ -1,5 +1,5 @@
 //
-//  PostEntry.swift
+//  PostDetails.swift
 //  Liftly
 //
 //  Created by Natanael Jop on 13/04/2026.
@@ -7,15 +7,15 @@
 
 import SwiftUI
 
-struct PostEntry {
+struct PostDetails {
     var id: String
-    var ownerId: String
+    var owner: User
     var title: String
     var dateCreated: Date
     var description: String?
     var image: URL?
     var isPublic: Bool
-    var likedUsersIds: [String]
-    var commentsIds: [String]
+    var likedUsers: [User]
+    var comments: [Comment]
     var workout: WorkoutEntry
 }

@@ -31,10 +31,10 @@ struct ActiveWorkoutView: View {
                     Divider()
                     HStack {
                         TimelineView(.periodic(from: .now, by: 1)) { _ in
-                            statCell("Duration", "\(viewModel.duration.formatIntoTime())")
+                            StatCell(title: "Duration", value: "\(viewModel.duration.formatIntoTime())", alignment: .center)
                         }
-                        statCell("Volume", "\(viewModel.totalVolume)kg")
-                        statCell("Sets", "\(viewModel.totalSets)")
+                        StatCell(title: "Volume", value: "\(viewModel.totalVolume)kg", alignment: .center)
+                        StatCell(title: "Sets", value: "\(viewModel.totalSets)", alignment: .center)
                     }.padding(.horizontal)
                     Divider()
                 }
@@ -120,21 +120,6 @@ extension ActiveWorkoutView {
         .padding(.horizontal)
         .padding(.bottom, 10)
         .background(Color.custom.darkerBackground)
-    }
-    
-    private func statCell(_ title: String, _ value: String) -> some View {
-        HStack {
-            Spacer()
-            VStack(alignment: .center, spacing: 8) {
-                Text(title)
-                    .font(.custom.footnote())
-                    .foregroundStyle(Color.custom.tertiary)
-                Text(value)
-                    .font(.custom.bodyMedium())
-                    .foregroundStyle(Color.custom.secondary)
-            }
-            Spacer()
-        }
     }
     
     private var getStartedView: some View {

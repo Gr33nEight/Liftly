@@ -8,6 +8,37 @@
 import Foundation
 
 enum PostMapper {
+    
+    static func toDomain(_ input: CreatePostInput, postId: String, imageUrl: URL?, workoutId: String) -> Post {
+        return Post(
+            id: postId,
+            ownerId: input.ownerId,
+            title: input.title,
+            dateCreated: input.dateCreated,
+            isPublic: input.isPublic,
+            description: input.description,
+            image: imageUrl,
+            likedUsersIds: [],
+            commentsIds: [],
+            workoutId: workoutId
+        )
+    }
+    
+    static func toPostDetails(_ domain: Post, owner: User, likedUsers: [User], comments: [Comment], workout: WorkoutEntry) -> PostDetails {
+        PostDetails(
+            id: domain.id,
+            owner: owner,
+            title: domain.title,
+            dateCreated: domain.dateCreated,
+            description: domain.description,
+            image: domain.image,
+            isPublic: domain.isPublic,
+            likedUsers: likedUsers,
+            comments: comments,
+            workout: workout
+        )
+    }
+    
     static func toDTO(_ domain: Post) -> PostDTO {
         return PostDTO(
             id: domain.id,
@@ -20,21 +51,6 @@ enum PostMapper {
             likedUsersIds: domain.likedUsersIds,
             commentsIds: domain.commentsIds,
             workoutId: domain.workoutId
-        )
-    }
-    
-    static func toDTO(_ entry: PostEntry) -> PostDTO {
-        return PostDTO(
-            id: entry.id,
-            ownerId: entry.ownerId,
-            title: entry.title,
-            dateCreated: entry.dateCreated,
-            isPublic: entry.isPublic,
-            description: entry.description,
-            image: mapImage(entry.image),
-            likedUsersIds: entry.likedUsersIds,
-            commentsIds: entry.commentsIds,
-            workoutId: entry.workout.id
         )
     }
     

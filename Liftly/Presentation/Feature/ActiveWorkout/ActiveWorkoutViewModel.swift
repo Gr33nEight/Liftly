@@ -9,9 +9,7 @@ import SwiftUI
 import Combine
 
 @MainActor
-final class ActiveWorkoutViewModel: ObservableObject {
-    @Published var post: PostEntry?
-    
+final class ActiveWorkoutViewModel: ObservableObject {    
     private var startDate: Date?
     var duration: Int {
         guard let startDate else { return 0 }
@@ -82,7 +80,7 @@ final class ActiveWorkoutViewModel: ObservableObject {
         }
     }
     
-    func buildPost(title: String, description: String?, date: Date, isPublic: Bool) -> PostEntry {
+    func buildPost(title: String, description: String?, date: Date, isPublic: Bool, image: Data?) -> CreatePostInput {
         let workoutEntry = WorkoutEntry(
             id: activeWorkoutId,
             duration: duration,
@@ -91,24 +89,22 @@ final class ActiveWorkoutViewModel: ObservableObject {
             trackedExercises: trackedExercises
         )
         
-        return PostEntry(
-            id: UUID().uuidString,
+        return CreatePostInput(
             ownerId: currentUserId,
             title: title,
             dateCreated: date,
             description: description,
+            image: image,
             isPublic: isPublic,
-            likedUsersIds: [],
-            commentsIds: [],
             workout: workoutEntry
         )
     }
     
     func savePost(title: String, description: String?, date: Date, isPublic: Bool, image: Data?) async {
-        let entry = self.buildPost(title: title, description: description, date: date, isPublic: isPublic)
+        let input = self.buildPost(title: title, description: description, date: date, isPublic: isPublic, image: image)
         
         do {
-            try await createPostUseCase.execute(entry: entry, image: image)
+            try await createPostUseCase.execute(input: input)
         } catch {
             print("Error: \(error.localizedDescription)")
         }

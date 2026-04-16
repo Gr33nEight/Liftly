@@ -34,6 +34,7 @@ final class AuthenticatedAppContainer {
     lazy private var toggleLikeUseCase: ToggleLikeUseCase = ToggleLikeUseCaseImpl(postRepository: postRepository)
     lazy private var getRoutinesUseCase: GetRoutinesUseCase = GetRoutinesUseCaseImpl(routineRepository: routineRepository, exerciseRepository: exerciseRepository)
     lazy private var getRoutineUseCase: GetRoutineUseCase = GetRoutineUseCaseImpl(routineRepository: routineRepository, exerciseRepository: exerciseRepository)
+    lazy private var getUserUseCase: GetUserUseCase = GetUserUseCaseImpl(userRepository: userRepository)
     
     let currentUserId: String
     
@@ -60,7 +61,8 @@ final class AuthenticatedAppContainer {
             currentUserId: currentUserId,
             deletePostUseCase: deletePostUseCase,
             fetchPostsUseCase: fetchPostsUseCase,
-            toggleLikeUseCase: toggleLikeUseCase
+            toggleLikeUseCase: toggleLikeUseCase,
+            getUserUseCase: getUserUseCase
         )
     }
     

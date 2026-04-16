@@ -10,7 +10,19 @@ import SwiftUI
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
     var body: some View {
-        Text("Home View")
+        ScrollView {
+            LazyVStack {
+                if viewModel.posts.isEmpty {
+                    Text("Gówno")
+                }else{
+                    ForEach(viewModel.posts, id: \.id) { post in
+                        Text(post.title)
+                    }
+                }
+            }.foregroundStyle(.accent)
+        }.task {
+            await viewModel.onAppear()
+        }
     }
 }
 

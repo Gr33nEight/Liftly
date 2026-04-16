@@ -42,6 +42,10 @@ extension Font {
             .custom("Roboto-Light", size: 17)
         }
         
+        static func bodyBold() -> Font {
+            .custom("Roboto-Bold", size: 17)
+        }
+        
         // MARK: - Secondary
         
         static func subheadline() -> Font {
