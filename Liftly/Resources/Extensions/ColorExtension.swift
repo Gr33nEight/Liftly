@@ -15,5 +15,6 @@ extension Color {
         static let background = Color("LBackground")
         static let darkerBackground: Color = Color("LBackgroundDarker")
         static let text = Color("LText")
+        static let green = Color("LGreen")
     }
 }

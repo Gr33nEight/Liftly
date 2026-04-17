@@ -16,7 +16,7 @@ final class AuthenticatedAppContainer {
     lazy private var storageRepository: StorageRepository = StorageRepositoryImpl(storageClient: firebaseStorageClient)
     
     lazy private var authRepository: AuthRepository = AuthRepositoryImpl(authClient: authClient)
-    lazy private var trakcedExerciseRepository: TrackedExerciseRepository = TrackedExerciseRepositoryImpl(firestoreClient: firestoreClient)
+    lazy private var trackedExerciseRepository: TrackedExerciseRepository = TrackedExerciseRepositoryImpl(firestoreClient: firestoreClient)
     lazy private var exerciseRepository: ExerciseRepository = ExerciseRepositoryImpl(storage: exerciseStorage)
     lazy private var postRepository: PostRepository = PostRepositoryImpl(firestoreClient: firestoreClient)
     lazy private var userRepository: UserRepository = UserRepositoryImpl(firestoreClient: firestoreClient)
@@ -28,13 +28,14 @@ final class AuthenticatedAppContainer {
     lazy private var signOutUseCase: SignOutUseCase = SignOutUseCaseImpl(authRepository: authRepository)
     lazy private var getExercisesUseCase: GetExercisesUseCase = GetExercisesUseCaseImpl(exerciseRepository: exerciseRepository)
     lazy private var createPostUseCase: CreatePostUseCase =
-    CreatePostUseCaseImpl(transactionProvider: transactionProvider, trackedExerciseRepo: trakcedExerciseRepository, workoutRepo: workoutRepository, postRepo: postRepository, storageRepo: storageRepository)
-    lazy private var deletePostUseCase: DeletePostUseCase = DeletePostUseCaseImpl(postRepository: postRepository, trackedExerciseRepository: trakcedExerciseRepository)
-    lazy private var fetchPostsUseCase: FetchPostsUseCase = FetchPostsUseCaseImpl(postRepository: postRepository, userRepository: userRepository, workoutRepository: workoutRepository, trackedExerciseRepository: trakcedExerciseRepository, exerciseRepository: exerciseRepository)
+    CreatePostUseCaseImpl(transactionProvider: transactionProvider, trackedExerciseRepo: trackedExerciseRepository, workoutRepo: workoutRepository, postRepo: postRepository, storageRepo: storageRepository)
+    lazy private var deletePostUseCase: DeletePostUseCase = DeletePostUseCaseImpl(postRepository: postRepository, trackedExerciseRepository: trackedExerciseRepository)
+    lazy private var fetchPostsUseCase: FetchPostsUseCase = FetchPostsUseCaseImpl(postRepository: postRepository, userRepository: userRepository, workoutRepository: workoutRepository, trackedExerciseRepository: trackedExerciseRepository, exerciseRepository: exerciseRepository)
     lazy private var toggleLikeUseCase: ToggleLikeUseCase = ToggleLikeUseCaseImpl(postRepository: postRepository)
-    lazy private var getRoutinesUseCase: GetRoutinesUseCase = GetRoutinesUseCaseImpl(routineRepository: routineRepository, exerciseRepository: exerciseRepository)
-    lazy private var getRoutineUseCase: GetRoutineUseCase = GetRoutineUseCaseImpl(routineRepository: routineRepository, exerciseRepository: exerciseRepository)
+    lazy private var getRoutinesUseCase: GetRoutinesUseCase = GetRoutinesUseCaseImpl(routineRepository: routineRepository, trackedExerciseRepository: trackedExerciseRepository, exerciseRepository: exerciseRepository)
+    lazy private var getRoutineUseCase: GetRoutineUseCase = GetRoutineUseCaseImpl(routineRepository: routineRepository, exerciseRepository: exerciseRepository, trackedExerciseRepository: trackedExerciseRepository)
     lazy private var getUserUseCase: GetUserUseCase = GetUserUseCaseImpl(userRepository: userRepository)
+    lazy private var saveRoutineUseCase: SaveRoutineUseCase = SaveRoutineUseCaseImpl(transactionProvider: transactionProvider, routineRepository: routineRepository, trackedExercisesRepository: trackedExerciseRepository)
     
     let currentUserId: String
     
@@ -87,8 +88,8 @@ final class AuthenticatedAppContainer {
     }
     
     @MainActor
-    private func makeRoutineViewModel() -> RoutineViewModel {
-        RoutineViewModel()
+    private func makeRoutineViewModel() -> CreateRoutineViewModel {
+        CreateRoutineViewModel(currentUserId: currentUserId, getExercisesUseCase: getExercisesUseCase, saveRoutineUseCase: saveRoutineUseCase)
     }
     
     @MainActor
@@ -129,7 +130,12 @@ final class AuthenticatedAppContainer {
     
     @MainActor
     func makeRoutineView() -> some View {
-        RoutineView(viewModel: self.makeRoutineViewModel())
+        CreateRoutineView(viewModel: self.makeRoutineViewModel())
+    }
+    
+    @MainActor
+    func makeCreateRoutineView() -> some View {
+        CreateRoutineView(viewModel: self.makeRoutineViewModel())
     }
     
     @MainActor

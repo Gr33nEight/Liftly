@@ -18,6 +18,7 @@ final class ActiveWorkoutViewModel: ObservableObject {
     
     @Published var trackedExercises: [TrackedExerciseEntry] = []
     @Published var exercises: [Exercise] = []
+    @Published var title: String = ""
     
     @Published var restTime: Int = 0
     @Published var totalRestTime: Int = 0
@@ -71,16 +72,18 @@ final class ActiveWorkoutViewModel: ObservableObject {
         }
     }
     
+    @MainActor
     func startRoutine(routineId: String) async {
         do {
             let routine = try await getRoutineUseCase.execute(routineId: routineId)
-            self.addTrackedExercises(for: routine.exercises)
+            addTrackedFromRoutine(routine)
+            title = routine.title
         } catch {
             print("Error: \(error.localizedDescription)")
         }
     }
     
-    func buildPost(title: String, description: String?, date: Date, isPublic: Bool, image: Data?) -> CreatePostInput {
+    func buildPost(description: String?, date: Date, isPublic: Bool, image: Data?) -> CreatePostInput {
         let workoutEntry = WorkoutEntry(
             id: activeWorkoutId,
             duration: duration,
@@ -100,8 +103,8 @@ final class ActiveWorkoutViewModel: ObservableObject {
         )
     }
     
-    func savePost(title: String, description: String?, date: Date, isPublic: Bool, image: Data?) async {
-        let input = self.buildPost(title: title, description: description, date: date, isPublic: isPublic, image: image)
+    func savePost(description: String?, date: Date, isPublic: Bool, image: Data?) async {
+        let input = self.buildPost(description: description, date: date, isPublic: isPublic, image: image)
         
         do {
             try await createPostUseCase.execute(input: input)
@@ -124,8 +127,33 @@ final class ActiveWorkoutViewModel: ObservableObject {
         }
     }
     
+    private func addTrackedFromRoutine(_ routine: RoutineEntry) {
+        trackedExercises += routine.trackedExercises.map {
+            var updated = $0
+            updated.workoutId = activeWorkoutId
+            updated.id = UUID().uuidString
+            return updated
+        }
+    }
     func removeExercise(_ id: String) {
         trackedExercises.removeAll(where: { $0.id == id })
+    }
+    
+    func removeSetFromExercise(setId: String, exerciseId: String) {
+        guard let exerciseIdx = trackedExercises.firstIndex(where: { $0.id == exerciseId }) else { return }
+        
+        trackedExercises[exerciseIdx].sets.removeAll { $0.id == setId }
+        var normalIndex = 1
+        
+        for idx in trackedExercises[exerciseIdx].sets.indices {
+            switch trackedExercises[exerciseIdx].sets[idx].type {
+            case .normal:
+                trackedExercises[exerciseIdx].sets[idx].type = .normal(normalIndex)
+                normalIndex += 1
+            default:
+                continue
+            }
+        }
     }
     
     func startRestTimer(time: Int) {

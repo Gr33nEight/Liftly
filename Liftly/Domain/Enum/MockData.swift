@@ -33,6 +33,7 @@ enum MockData {
     static let sets: [ExerciseSet] = [
         ExerciseSet(
             type: .normal(1),
+            isDone: true,
             weight: 12.5,
             reps: 10,
         ),
@@ -49,9 +50,7 @@ enum MockData {
     ]
     
     static let routines: [RoutineEntry] = [
-        RoutineEntry(id: "", title: "Test", exercises: MockData.exercises, ownerId: ""),
-        RoutineEntry(id: "", title: "Test2", exercises: MockData.exercises, ownerId: ""),
-        RoutineEntry(id: "", title: "Test3", exercises: MockData.exercises, ownerId: ""),
+        RoutineEntry(id: "", title: "Test", trackedExercises: [], ownerId: "")
     ]
     
     static let stats: [WorkoutData] = [
@@ -65,7 +64,8 @@ enum MockData {
     ]
     
     static let users: [User] = [
-        
+        User(id: "1", name: "Natan", email: "test@gmail.com"),
+        User(id: "2", name: "Test", email: "test2@gmail.com")
     ]
     
     static let posts: [PostDetails] =
@@ -75,7 +75,7 @@ enum MockData {
                 TrackedExerciseEntry(id: "1", workoutId: "", exercise: MockData.exercises[0], restTime: 90, sets: MockData.sets),
                 TrackedExerciseEntry(id: "2", workoutId: "", exercise: MockData.exercises[1], restTime: 90, sets: MockData.sets)
             ])),
-        PostDetails(id: "2", owner: users[0], title: "Test 2", dateCreated: Date(), isPublic: true, likedUsers: [], comments: [], workout: WorkoutEntry(
+        PostDetails(id: "2", owner: users[1], title: "Test 2", dateCreated: Date(), isPublic: true, likedUsers: [], comments: [], workout: WorkoutEntry(
             id: "", duration: 3820, volume: 12021.5, sets: 22, trackedExercises: [
                 TrackedExerciseEntry(id: "1", workoutId: "", exercise: MockData.exercises[0], restTime: 90, sets: MockData.sets),
                 TrackedExerciseEntry(id: "2", workoutId: "", exercise: MockData.exercises[1], restTime: 90, sets: MockData.sets)

@@ -124,6 +124,7 @@ extension AddExerciseView {
                 VStack(alignment: .leading) {
                     Text(exercise.title)
                         .font(.custom.bodyMedium())
+                        .foregroundStyle(Color.custom.text)
                     
                     Text(
                         exercise.primaryMuscleGroup.displayName +

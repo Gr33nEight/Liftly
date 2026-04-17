@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C6D596F2F922B1F0024B883 /* SwipeCell in Frameworks */ = {isa = PBXBuildFile; productRef = 3C6D596E2F922B1F0024B883 /* SwipeCell */; };
 		3C7B02C62F8E675900EEAC9E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 3C7B02C52F8E675900EEAC9E /* FirebaseAuth */; };
 		3C7B02C82F8E675900EEAC9E /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 3C7B02C72F8E675900EEAC9E /* FirebaseFirestore */; };
 		3C7B02CA2F8E675900EEAC9E /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 3C7B02C92F8E675900EEAC9E /* FirebaseStorage */; };
@@ -47,6 +48,7 @@
 				3C7B02C62F8E675900EEAC9E /* FirebaseAuth in Frameworks */,
 				3C7B02C82F8E675900EEAC9E /* FirebaseFirestore in Frameworks */,
 				3C7B02CA2F8E675900EEAC9E /* FirebaseStorage in Frameworks */,
+				3C6D596F2F922B1F0024B883 /* SwipeCell in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +95,7 @@
 				3C7B02C72F8E675900EEAC9E /* FirebaseFirestore */,
 				3C7B02C92F8E675900EEAC9E /* FirebaseStorage */,
 				3C7B058E2F8FE81E00EEAC9E /* Kingfisher */,
+				3C6D596E2F922B1F0024B883 /* SwipeCell */,
 			);
 			productName = Liftly;
 			productReference = 3C8589F12F7DA874005AB567 /* Liftly.app */;
@@ -125,6 +128,7 @@
 			packageReferences = (
 				3C7B02C42F8E675900EEAC9E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				3C7B058D2F8FE81E00EEAC9E /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				3C6D596D2F922B1F0024B883 /* XCRemoteSwiftPackageReference "SwipeCell" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 3C8589F22F7DA874005AB567 /* Products */;
@@ -376,6 +380,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		3C6D596D2F922B1F0024B883 /* XCRemoteSwiftPackageReference "SwipeCell" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/fatbobman/SwipeCell";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.9;
+			};
+		};
 		3C7B02C42F8E675900EEAC9E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -395,6 +407,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		3C6D596E2F922B1F0024B883 /* SwipeCell */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3C6D596D2F922B1F0024B883 /* XCRemoteSwiftPackageReference "SwipeCell" */;
+			productName = SwipeCell;
+		};
 		3C7B02C52F8E675900EEAC9E /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3C7B02C42F8E675900EEAC9E /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

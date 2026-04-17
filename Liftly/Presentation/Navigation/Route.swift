@@ -12,5 +12,6 @@ enum Route: Hashable {
     case comments
     case workoutDetail
     case routine
+    case createRoutine
     case activeWorkout(routineId: String?)
 }

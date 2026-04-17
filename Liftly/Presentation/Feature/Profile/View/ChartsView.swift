@@ -19,11 +19,10 @@ struct ChartsView: View {
             .foregroundStyle(
                 selected == workout.occurence ?
                     Color.custom.primary :
-                    Color.custom.tertiary
+                    Color.custom.secondary
             )
             .cornerRadius(5)
         }.frame(height: 200)
-//            .chartYAxis(.hidden)
             .chartYAxis {
                 AxisMarks(position: .leading) { value in
                     AxisGridLine()
@@ -37,7 +36,6 @@ struct ChartsView: View {
                 }
             }
             .chartXSelection(value: $selected)
-            .animation(.easeInOut, value: selected)
     }
 }
 

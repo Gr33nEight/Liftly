@@ -7,12 +7,16 @@
 
 
 import SwiftUI
+import SwipeCell
+import Kingfisher
 
 struct TrackedExerciseView: View {
+    var isRoutineView: Bool = false
     @Binding var trackedExercise: TrackedExerciseEntry
     @State private var showTimerModal: Bool = false
     
     var onExerciseRemove: (String) -> Void
+    var onSetRemove: (String, String) -> Void
     var onExerciseReplace: (String) -> Void
     var onDone: (Int) -> Void
     
@@ -36,8 +40,8 @@ extension TrackedExerciseView {
         HStack(spacing: 15) {
             ZStack {
                 Color.custom.tertiary.opacity(0.5)
-                Text("🏋")
-                    .font(.title)
+                KFImage(trackedExercise.exercise.imageUrl)
+                    .resizable()
             }
             .frame(width: 50, height: 50)
             .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -85,7 +89,9 @@ extension TrackedExerciseView {
             if trackedExercise.hasDistance { Text("DIST") }
             if trackedExercise.hasDuration { Text("TIME") }
             
-            Image(systemName: "checkmark").font(.title3).bold()
+            if !isRoutineView {
+                Image(systemName: "checkmark").font(.title3).bold()
+            }
         }.padding(.horizontal)
         .foregroundStyle(Color.custom.tertiary)
         .font(.custom.subheadline())
@@ -95,6 +101,7 @@ extension TrackedExerciseView {
                 LazyVGrid(columns: columns, spacing: 12) {
                     
                     Text(set.type.displayedValue).bold()
+                        .foregroundStyle(Color.custom.text)
                     
 
                     if trackedExercise.hasWeight {
@@ -114,20 +121,56 @@ extension TrackedExerciseView {
                     }
 
                     
-                    Button {
-                        set.isDone.toggle()
-                        if set.isDone {
-                            onDone(trackedExercise.restTime)
+                    if !isRoutineView {
+                        Button {
+                            set.isDone.toggle()
+                            if set.isDone {
+                                onDone(trackedExercise.restTime)
+                            }
+                        } label: {
+                            Image(systemName: set.isDone ? "checkmark.square.fill" : "square")
+                                .foregroundStyle(
+                                    set.isDone ? Color.custom.text : Color.custom.tertiary
+                                )
+                                .font(.title)
                         }
-                    } label: {
-                        Image(systemName: set.isDone ? "checkmark.square.fill" : "square")
-                            .foregroundStyle(
-                                set.isDone ? Color.custom.primary : Color.custom.tertiary
-                            )
-                            .font(.title)
                     }
                 }.padding()
-                .background(Color.custom.tertiary.opacity(0.1))
+                .background(
+                    set.isDone ? Color.custom.green.opacity(0.75) : Color.custom.tertiary.opacity(0.1)
+                )
+//                .swipeCell(
+//                    cellPosition: .right,
+//                    leftSlot: nil,
+//                    rightSlot: SwipeCellSlot(
+//                        slots: [
+//                            SwipeCellButton(
+//                                buttonStyle: .title,
+//                                title: "Delete",
+//                                systemImage: nil,
+//                                titleColor: Color.custom.text,
+//                                imageColor: Color.custom.text,
+//                                view: nil,
+//                                backgroundColor: Color.red,
+//                                action: {
+//                                    onSetRemove(set.id, trackedExercise.id)
+//                                },
+//                                feedback: true
+//                            )
+//                        ],
+//                        slotStyle: .destructive,
+//                        buttonWidth: 100,
+//                        appearAnimation: .easeIn,
+//                        dismissAnimation: .easeOut,
+//                        showAction: nil
+//                    ),
+//                    swipeCellStyle: .defaultStyle(),
+//                    clip: true,
+//                    disable: false,
+//                    initalStatus: .showCell,
+//                    initialStatusResetDelay: 0
+//                )
+                .frame(height: 55)
             }.font(.custom.metricSmall())
         }
         
@@ -156,7 +199,9 @@ extension TrackedExerciseView {
             cols.append(GridItem(.flexible()))
         }
         
-        cols.append(GridItem(.fixed(40)))
+        if !isRoutineView {
+            cols.append(GridItem(.fixed(40)))
+        }
         
         return cols
     }
@@ -225,12 +270,12 @@ extension TrackedExerciseView {
 }
 
 #Preview {
-//    VStack{
-//        Spacer()
-//        TrackedExerciseView(trackedExercise: .constant(TrackedExercise(id: "", workoutId: "", exercise: MockData.exercises[0], restTime: 90, sets: MockData.sets)), onExerciseRemove: {_ in}) { _ in} onDone: { _ in }
-//        Spacer()
-//    }.background(Color.custom.background)
-//        .preferredColorScheme(.dark)
+    VStack{
+        Spacer()
+        TrackedExerciseView(trackedExercise: .constant(TrackedExerciseEntry(id: "", workoutId: "", exercise: MockData.exercises[0], restTime: 90, sets: MockData.sets)), onExerciseRemove: {_ in},  onSetRemove: { _, _ in}, onExerciseReplace: {_ in}, onDone: {_ in})
+        Spacer()
+    }.background(Color.custom.background)
+        .preferredColorScheme(.dark)
 }
 
 

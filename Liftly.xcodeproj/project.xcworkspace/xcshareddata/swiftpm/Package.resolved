@@ -1,5 +1,5 @@
 {
-  "originHash" : "21e0ad1246818b9c019df4a0423c2d9f4d078d334774cda2fee80c832cdf6fb9",
+  "originHash" : "39d4822749e1d3488f26e38241bcc5899a5f8a5d2540d7ef3c2b8ebb47f017f4",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -125,6 +125,24 @@
       "state" : {
         "revision" : "540318ecedd63d883069ae7f1ed811a2df00b6ac",
         "version" : "2.4.0"
+      }
+    },
+    {
+      "identity" : "swiftui-introspect",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/timbersoftware/SwiftUI-Introspect.git",
+      "state" : {
+        "revision" : "121c146fe591b1320238d054ae35c81ffa45f45a",
+        "version" : "0.12.0"
+      }
+    },
+    {
+      "identity" : "swipecell",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/fatbobman/SwipeCell",
+      "state" : {
+        "revision" : "62808eab5c7f73bffa576d3763d74248796e6a93",
+        "version" : "0.9.9"
       }
     }
   ],

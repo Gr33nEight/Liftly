@@ -50,6 +50,8 @@ struct ActiveWorkoutView: View {
                             ForEach($viewModel.trackedExercises) { $ex in
                                 TrackedExerciseView(trackedExercise: $ex) { id in
                                     viewModel.removeExercise(id)
+                                } onSetRemove: { setId, exerciseId in
+                                    viewModel.removeSetFromExercise(setId: setId, exerciseId: exerciseId)
                                 } onExerciseReplace: { id in
                                     showExericseListType = .replace(id)
                                 } onDone: { time in
@@ -83,9 +85,9 @@ struct ActiveWorkoutView: View {
             }
         }
         .fullScreenCover(isPresented: $showSaveWorkoutView) {
-            SaveWorkoutView(viewModel: viewModel) {
+            SaveWorkoutView(viewModel: viewModel, onSave: {
                 shouldCloseFlow = true
-            }
+            }, savedTime: viewModel.duration)
         }
         .onChange(of: showSaveWorkoutView) { _, isPresented in
             guard !isPresented && shouldCloseFlow else { return }

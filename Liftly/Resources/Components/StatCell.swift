@@ -11,9 +11,12 @@ struct StatCell: View {
     let title: String
     let value: String
     let alignment: HorizontalAlignment
+    var ommitSpacer: Bool = false
     var body: some View {
         HStack {
-            Spacer()
+            if !ommitSpacer {
+                Spacer()
+            }
             VStack(alignment: alignment, spacing: 8) {
                 Text(title)
                     .font(.custom.footnote())

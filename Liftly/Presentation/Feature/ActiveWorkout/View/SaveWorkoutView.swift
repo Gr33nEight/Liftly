@@ -11,7 +11,6 @@ import PhotosUI
 struct SaveWorkoutView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: ActiveWorkoutViewModel
-    @State private var title: String = ""
     @State private var description: String = ""
     @State private var isPublic: Bool = true
     @State private var date: Date = Date()
@@ -22,6 +21,7 @@ struct SaveWorkoutView: View {
     @State private var image: UIImage?
     
     var onSave: () -> Void
+    let savedTime: Int
     
     var body: some View {
         VStack(spacing: 0) {
@@ -36,7 +36,6 @@ struct SaveWorkoutView: View {
                     Button("Save") {
                         Task {
                             await viewModel.savePost(
-                                title: title,
                                 description: description,
                                 date: date,
                                 isPublic: isPublic,
@@ -58,16 +57,23 @@ struct SaveWorkoutView: View {
                 VStack(spacing: 20) {
                     titleTextField
                     HStack {
-                        StatCell(title: "Duration", value: "\(viewModel.duration.formatIntoTime())", alignment: .leading)
-                        StatCell(title: "Volume", value: "\(viewModel.totalVolume)kg", alignment: .leading)
-                        StatCell(title: "Sets", value: "\(viewModel.totalSets)", alignment: .leading)
+                        StatCell(title: "Duration", value: "\(savedTime.formatIntoTime())", alignment: .leading, ommitSpacer: true)
+                        StatCell(title: "Volume", value: "\(viewModel.totalVolume)kg", alignment: .leading, ommitSpacer: true)
+                        StatCell(title: "Sets", value: "\(viewModel.totalSets)", alignment: .leading, ommitSpacer: true)
                     }
                     Divider()
                     Button(action: {
                         showDatePicker.toggle()
                     }) {
-                        StatCell(title: "When", value: date.formatted(date: .abbreviated, time: .shortened), alignment: .leading)
-                    }
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("When")
+                                .font(.custom.footnote())
+                                .foregroundStyle(Color.custom.tertiary)
+                            Text(date.formatted(date: .abbreviated, time: .shortened))
+                                .font(.custom.bodyMedium())
+                                .foregroundStyle(Color.custom.secondary)
+                        }
+                    }.frame(maxWidth: .infinity, alignment: .leading)
                     Divider()
                     addImageCell
                     descriptionCell
@@ -87,7 +93,7 @@ extension SaveWorkoutView {
     @ViewBuilder
     private var titleTextField: some View {
         HStack {
-            TextField("Workout title", text: $title)
+            TextField("Workout title", text: $viewModel.title)
                 .font(.custom.largeTitle())
             Button {
                 
@@ -218,6 +224,6 @@ extension SaveWorkoutView {
 #Preview {
     SaveWorkoutView(viewModel: ActiveWorkoutViewModel(currentUserId: "", routineId: "", createPostUseCase: MockCreatePostUseCase(), getExercisesUseCase: MockGetExercisesUseCase(), getRoutineUseCase: MockGetRoutineUseCase()), onSave: {
         
-    })
+    }, savedTime: 900)
         .preferredColorScheme(.dark)
 }

@@ -12,3 +12,10 @@ struct Routine: Identifiable {
     let exercisesIds: [String]
     let ownerId: String
 }
+
+
+struct CreateRoutineInput {
+    var title: String
+    var trackedExercises: [TrackedExerciseEntry]
+    var ownerId: String
+}

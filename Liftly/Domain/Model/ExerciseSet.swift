@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ExerciseSet: Identifiable {
-    var id: UUID = UUID()
+    var id: String = UUID().uuidString
     var type: SetType
     var isDone: Bool = false
     var weight: Double?
