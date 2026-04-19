@@ -29,9 +29,14 @@ enum MuscleGroup: Int, CaseIterable, Codable {
     case other
     
     init(from decoder: Decoder) throws {
-       let raw = try decoder.singleValueContainer().decode(Int.self)
-       self = MuscleGroup(rawValue: raw) ?? .other
-   }
+        let container = try decoder.singleValueContainer()
+         
+        if let raw = try? container.decode(Int.self) {
+            self = MuscleGroup(rawValue: raw) ?? .other
+        } else {
+            self = .other
+        }
+    }
 }
 
 extension MuscleGroup {

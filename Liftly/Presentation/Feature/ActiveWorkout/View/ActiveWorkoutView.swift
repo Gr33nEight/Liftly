@@ -20,7 +20,6 @@ struct ActiveWorkoutView: View {
     }
     
     @Environment(\.dismiss) var dismiss
-    @Environment(\.navigate) var navigate
     
     let generator = UIImpactFeedbackGenerator(style: .soft)
     
@@ -61,6 +60,7 @@ struct ActiveWorkoutView: View {
                             }
                             defaultButtons.padding(.horizontal)
                         }.padding(.top, 20)
+                            .padding(.bottom, 80)
                     }
                 }
             }
@@ -105,7 +105,7 @@ extension ActiveWorkoutView {
         ZStack {
             HStack {
                 Button {
-                    navigate(.unwind(nil))
+                    dismiss()
                 } label: {
                     Image(systemName: "chevron.left")
                 }
@@ -219,14 +219,15 @@ extension ActiveWorkoutView {
                 Spacer()
             }
         }.transition(.move(edge: .bottom).combined(with: .opacity))
+            .padding(.bottom, 5)
             .background(Color.custom.darkerBackground)
 
     }
 }
 
 
-#Preview {
-    ActiveWorkoutView(viewModel: ActiveWorkoutViewModel(currentUserId: "",routineId: "", createPostUseCase: MockCreatePostUseCase(), getExercisesUseCase: MockGetExercisesUseCase()))
-        .preferredColorScheme(.dark)
-}
+//#Preview {
+//    ActiveWorkoutView(viewModel: ActiveWorkoutViewModel(currentUserId: "",routineId: "", createPostUseCase: MockCreatePostUseCase(), getExercisesUseCase: MockGetExercisesUseCase()))
+//        .preferredColorScheme(.dark)
+//}
 

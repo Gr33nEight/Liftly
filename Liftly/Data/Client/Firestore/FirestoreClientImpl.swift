@@ -66,6 +66,26 @@ final class FirestoreClientImpl: FirestoreClient {
         try await ref.delete()
     }
     
+    func batchDelete<E>(_ endpoint: E.Type, query: FirestoreQuery) async throws where E : FirestoreEndpoint {
+        let snapshot = try await self.fetchSnapshot(endpoint, query: query)
+        let batch = db.batch()
+        
+        for doc in snapshot.documents {
+            batch.deleteDocument(doc.reference)
+        }
+        
+        try await batch.commit()
+    }
+    
+    func runBatch(_ block: (any FirestoreBatch) -> Void) async throws {
+        let batch = db.batch()
+        
+        let wrapper = FirestoreBatchImpl(db: db, batch: batch)
+        block(wrapper)
+        
+        try await batch.commit()
+    }
+    
     func listen<E>(
         _ endpoint: E.Type,
         query: FirestoreQuery
@@ -229,5 +249,23 @@ final class FirestoreClientImpl: FirestoreClient {
         case .documentId:
             return documentIdBlock(ref, FieldPath.documentID())
         }
+    }
+
+    private func fetchSnapshot<E>(_ endpoint: E.Type, query: FirestoreQuery) async throws -> QuerySnapshot where E: FirestoreEndpoint {
+        var ref: Query = db.collection(endpoint.path)
+        
+        for filter in query.filters {
+            ref = applyFilter(ref, filter: filter)
+        }
+        
+        if let order = query.order {
+            ref = ref.order(by: order.field, descending: order.descending)
+        }
+        
+        if let limit = query.limit {
+            ref = ref.limit(to: limit)
+        }
+        
+        return try await ref.getDocuments()
     }
 }

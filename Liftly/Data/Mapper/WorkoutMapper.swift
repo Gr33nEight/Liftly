@@ -57,15 +57,15 @@ enum WorkoutMapper {
             duration: entry.duration,
             volume: entry.volume,
             sets: entry.sets,
-            exercisesIds: entry.exercises.compactMap({$0.id}))
+            exercisesIds: entry.trackedExercises.compactMap({$0.id}))
     }
     
-    static func toEntry(_ domain: Workout, exercises: [TrackedExercise]) -> WorkoutEntry{
+    static func toEntry(_ domain: Workout, trackedExercises: [TrackedExerciseEntry]) -> WorkoutEntry{
         return WorkoutEntry(
             id: domain.id,
             duration: domain.duration,
             volume: domain.volume,
             sets: domain.sets,
-            exercises: exercises)
+            trackedExercises: trackedExercises)
     }
 }

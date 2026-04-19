@@ -8,14 +8,19 @@
 import SwiftUI
 
 struct AuthenticatedAppRootView: View {
+    @StateObject private var viewModel: AuthenticatedAppViewModel
     private let container: AuthenticatedAppContainer
     
     init(container: AuthenticatedAppContainer) {
         self.container = container
+        self._viewModel = StateObject(wrappedValue: container.makeAuthenticatedAppViewModel())
     }
     
     var body: some View {
         NavigationStackContentView(container: container)
+            .onAppear {
+                viewModel.preloadExercises()
+            }
     }
 }
 

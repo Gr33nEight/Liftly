@@ -12,4 +12,6 @@ struct UserDTO: Codable, Sendable {
     @DocumentID var id: String?
     var name: String
     var email: String
+    var followersIds: [String]
+    var followingIds: [String]
 }

@@ -13,6 +13,8 @@ enum PostMapper {
             id: domain.id,
             ownerId: domain.ownerId,
             title: domain.title,
+            dateCreated: domain.dateCreated,
+            isPublic: domain.isPublic,
             description: domain.description,
             image: mapImage(domain.image),
             likedUsersIds: domain.likedUsersIds,
@@ -26,6 +28,8 @@ enum PostMapper {
             id: entry.id,
             ownerId: entry.ownerId,
             title: entry.title,
+            dateCreated: entry.dateCreated,
+            isPublic: entry.isPublic,
             description: entry.description,
             image: mapImage(entry.image),
             likedUsersIds: entry.likedUsersIds,
@@ -43,7 +47,10 @@ enum PostMapper {
             id: id,
             ownerId: dto.ownerId,
             title: dto.title,
+            dateCreated: dto.dateCreated,
+            isPublic: dto.isPublic,
             description: dto.description,
+            image: mapImage(dto.image),
             likedUsersIds: dto.likedUsersIds,
             commentsIds: dto.commentsIds,
             workoutId: dto.workoutId
@@ -88,12 +95,16 @@ enum PostMapper {
         }
     }
     
-    private static func mapImage(_ dto: PostDTO) -> URL? {
-        return URL(string: dto.image)
+    private static func mapImage(_ image: String?) -> URL? {
+        guard let image else { return nil }
+        
+        let cleaned = image.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return URL(string: cleaned)
     }
     
-    private static func mapImage(_ image: URL?) -> String {
-        return image?.absoluteString ?? ""
+    private static func mapImage(_ image: URL?) -> String? {
+        return image?.absoluteString
     }
     
 }
