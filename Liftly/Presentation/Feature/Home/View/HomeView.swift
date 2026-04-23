@@ -9,10 +9,6 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
-    
-    @State private var selectedTab: TabDestination = .home
-    let appContainer = AuthenticatedAppContainer(currentUserId: "person");
-    
     var body: some View {
         VStack {
             HStack {
@@ -31,12 +27,14 @@ struct HomeView: View {
             ScrollView{
                 ForEach (1..<2, id: \.self){ _ in
                     PostCell()
+                    
+                    PostCell()
+                    
+                    PostCell()
+                    
+                    PostCell()
                 }
             }
-            
-            NavigationBarContentView(
-                selected: $selectedTab, container: appContainer
-            )
         }
     }
 }
@@ -111,9 +109,43 @@ struct PostCell: View {
                 }
             }
         }
+        
+        VStack (spacing: 10){
+            SimpleExcerciseRow(iconName: "figure.strengthtraining.traditional", exerciseText: "4 sets Bench Press")
+            
+            SimpleExcerciseRow(iconName: "figure.walk", exerciseText: "4 stets Lunge")
+            
+            SimpleExcerciseRow(iconName: "figure.strengthtraining.traditional", exerciseText: "4 Gorllla Row")
+        }.padding()
     }
 }
+
+//Template exercise
+struct SimpleExcerciseRow: View {
+    var iconName: String
+    var exerciseText: String
+    
+    var body: some View {
+        HStack{
+            Image(systemName: iconName)
+                .resizable()
+                .scaledToFit()
+                .padding(10)
+                .frame(width: 50, height: 50)
+                .background(Color.white)
+                .foregroundColor(.black)
+                .clipShape(Circle())
+            
+            Text(exerciseText)
+                .font(.custom.body())
+                .foregroundColor(.white)
+            
+            Spacer()
+        }
+    }
+}
+
 #Preview {
-    HomeView(viewModel: HomeViewModel())
+    HomeView(viewModel: HomeViewModel(currentUserId: "", deletePostUseCase: MockDeletePostUseCase(), fetchPostsUseCase: MockFetchPostsUseCase(), toggleLikeUseCase: MockToggleLikeUseCase()))
         .preferredColorScheme(.dark)
 }
