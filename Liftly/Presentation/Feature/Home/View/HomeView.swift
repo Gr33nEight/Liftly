@@ -22,7 +22,7 @@ struct HomeView: View {
                 Button(action: {}) {
                     Image(systemName: "bell")
                 }
-            }.padding(20)
+            }.padding(.horizontal)
             
             ScrollView{
                 ForEach (MockData.routines, id: \.title){ Rutine in

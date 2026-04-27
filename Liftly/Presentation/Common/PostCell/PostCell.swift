@@ -12,34 +12,15 @@ struct PostCell: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                //profil photo
-                Image(systemName: "person.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(10)
-                    .frame(width:50, height: 50)
-                    .background(Color.gray.opacity(0.3))
-                    .clipShape(Circle())
-                
-                //describe profile
-                VStack(alignment: .leading) {
-                    Text("User123")
-                        .font(.headline)
-                    
-                    Text("3 ours ago")
-                        .font(.subheadline)
-                        .foregroundColor(.custom.tertiary)
-                }
-                
-                Spacer()
-                
-            } .padding()
+            
+            postCellProfileInfo
             
             //statistics
             Text(routine.title)
                 .fontWeight(.bold)
                 .padding(.horizontal)
+                .padding(.bottom, 10)
+                .padding(.top, -10)
             
             HStack (spacing: 25){
                 VStack(alignment: .leading){
@@ -58,40 +39,48 @@ struct PostCell: View {
                         .font(.headline)
                 }
                 
-                VStack(alignment:.leading) {
-                    Text("Records")
-                        .font(.caption)
-                        .foregroundColor(.custom.tertiary)
-                    
-                    HStack(spacing: 4) {
-                        Image(systemName: "medal.fill")
-                            .foregroundColor(.yellow)
-                        Text("4")
-                    }
-                }
-                
-                VStack{
-                    Text("Acg Bpm")
-                        .font(.caption)
-                        .foregroundColor(.custom.tertiary)
-                    HStack(spacing: 4) {
-                        Image(systemName: "heart.fill")
-                            .foregroundColor(.red)
-                        Text("117")
-                    }
-                }
             }.padding(.horizontal)
+            
+            Divider()
             
             VStack (spacing: 10){
                 ForEach(routine.exercises, id: \.title) { exercise in
                     SimpleExcerciseRow(iconName: "figure.strengthtraining.traditional", exerciseText: exercise.title)
                 }
-            }.padding()
+            }
+            .padding(.horizontal)
+            .padding(.top, 4)
             
-            Divider()
-                .background(Color.custom.background)
+            Rectangle()
+                .fill(Color.gray.opacity(0.3))
+                .frame(height:10)
                 .padding(.vertical, 20)
         }
     }
+    
+    private var postCellProfileInfo: some View{
+        HStack {
+            //profil photo
+            Image(systemName: "person.fill")
+                .resizable()
+                .scaledToFit()
+                .padding(10)
+                .frame(width:50, height: 50)
+                .background(Color.gray.opacity(0.3))
+                .clipShape(Circle())
+            
+            //describe profile
+            VStack(alignment: .leading) {
+                Text("User123")
+                    .font(.headline)
+                
+                Text("3 ours ago")
+                    .font(.subheadline)
+                    .foregroundColor(.custom.tertiary)
+            }
+            
+            Spacer()
+            
+        } .padding()
+    }
 }
-
