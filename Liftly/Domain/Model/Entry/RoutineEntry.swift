@@ -12,6 +12,7 @@ struct RoutineEntry {
     var title: String
     var exercises: [Exercise]
     let ownerId: String
+    var workoutPhoto: String?
     
     var exerciseTitles: [String] {
         exercises.map(\.title)

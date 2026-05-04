@@ -10,6 +10,8 @@ import SwiftUI
 struct PostCell: View {
     var routine: RoutineEntry
     
+    @State private var isLiked: Bool = false
+    
     var body: some View {
         VStack(alignment: .leading) {
             
@@ -43,13 +45,42 @@ struct PostCell: View {
             
             Divider()
             
-            VStack (spacing: 10){
-                ForEach(routine.exercises, id: \.title) { exercise in
-                    SimpleExcerciseRow(iconName: "figure.strengthtraining.traditional", exerciseText: exercise.title)
+            if let photoName = routine.workoutPhoto {
+                TabView{
+                    Image(photoName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 350, height: 300)
+                        .clipped()
+                        .cornerRadius(12)
+                    
+                    exercisesSummarySlide
+                }
+                .frame(height: 320)
+                .tabViewStyle(.page(indexDisplayMode: .always))
+            } else {
+                exercisesSummarySlide
+            }
+            
+            HStack{
+                Button (action: {
+                    isLiked.toggle()
+                }) {
+                    Image(systemName: isLiked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                        .scaleEffect(isLiked ? 1.2 : 1.0)
+                        .animation(.spring(response: 0.3, dampingFraction: 0.5), value: isLiked)
+                }
+                
+                Button (action: {}) {
+                    Image(systemName: "message")
+                }.padding(.horizontal)
+                
+                Button(action: {}) {
+                    Image(systemName: "square.and.arrow.up")
                 }
             }
             .padding(.horizontal)
-            .padding(.top, 4)
+            .padding(.top, 10)
             
             Rectangle()
                 .fill(Color.gray.opacity(0.3))
@@ -82,5 +113,23 @@ struct PostCell: View {
             Spacer()
             
         } .padding()
+    }
+    
+    private var exercisesSummarySlide: some View {
+        VStack (spacing: 10){
+            ForEach(routine.exercises.prefix(3), id: \.title) { exercise in
+                SimpleExcerciseRow(iconName: "figure.strengthtraining.traditional", exerciseText: exercise.title)
+            }
+            
+            if routine.exercises.count > 3 {
+                let hiddenCount = routine.exercises.count - 3
+                
+                Text("See \(hiddenCount) more exercise")
+                    .font(.subheadline)
+                    .foregroundColor(.custom.tertiary)
+            }
+        }
+        .padding(.horizontal)
+        .padding(.top, 4)
     }
 }

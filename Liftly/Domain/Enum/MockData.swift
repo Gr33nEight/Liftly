@@ -27,6 +27,26 @@ enum MockData {
             primaryMuscleGroup: .lats,
             otherMuscleGroup: .biceps,
             exerciseType: .bodyweightReps
+        ),
+        
+        Exercise(
+            id: "pull_ups",
+            title: "Pull Ups",
+            howTo: "Pull yourself",
+            equipment: .none,
+            primaryMuscleGroup: .lats,
+            otherMuscleGroup: .biceps,
+            exerciseType: .bodyweightReps
+        ),
+        
+        Exercise(
+            id: "pull_ups",
+            title: "Pull Ups",
+            howTo: "Pull yourself",
+            equipment: .none,
+            primaryMuscleGroup: .lats,
+            otherMuscleGroup: .biceps,
+            exerciseType: .bodyweightReps
         )
     ]
     
@@ -50,8 +70,8 @@ enum MockData {
     ]
     
     static let routines: [RoutineEntry] = [
-        RoutineEntry(id: "", title: "Test", exercises: MockData.exercises, ownerId: ""),
-        RoutineEntry(id: "", title: "Test2", exercises: MockData.exercises, ownerId: ""),
-        RoutineEntry(id: "", title: "Test3", exercises: MockData.exercises, ownerId: ""),
+        RoutineEntry(id: "", title: "Test", exercises: MockData.exercises, ownerId: "", workoutPhoto: "TestPostImage"),
+        RoutineEntry(id: "", title: "Test2", exercises: MockData.exercises, ownerId: "", workoutPhoto: nil),
+        RoutineEntry(id: "", title: "Test3", exercises: MockData.exercises, ownerId: "", workoutPhoto: nil),
     ]
 }
