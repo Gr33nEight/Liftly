@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PostCell: View {
-    var routine: RoutineEntry
+    var post: PostDetails
     
     @State private var isLiked: Bool = false
     

@@ -59,6 +59,6 @@ struct SimpleExcerciseRow: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeViewModel(currentUserId: "", deletePostUseCase: MockDeletePostUseCase(), fetchPostsUseCase: MockFetchPostsUseCase(), toggleLikeUseCase: MockToggleLikeUseCase()))
+    HomeView(viewModel: HomeViewModel(currentUserId: "", deletePostUseCase: MockDeletePostUseCase(), fetchPostsUseCase: MockFetchPostsUseCase(), toggleLikeUseCase: MockToggleLikeUseCase(), getUserUseCase: MockGetUserUseCase()))
         .preferredColorScheme(.dark)
 }

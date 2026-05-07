@@ -28,7 +28,7 @@ final class ToggleLikeUseCaseImpl: ToggleLikeUseCase {
 }
 
 final class MockToggleLikeUseCase: ToggleLikeUseCase{
-    func execute(post: PostEntry, userId: String) async throws {
+    func execute(post: PostDetails, userId: String) async throws {
         return
     }
 }

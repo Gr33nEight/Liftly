@@ -70,9 +70,9 @@ enum MockData {
     ]
     
     static let routines: [RoutineEntry] = [
-        RoutineEntry(id: "", title: "Test", exercises: MockData.exercises, ownerId: "", workoutPhoto: "TestPostImage"),
-        RoutineEntry(id: "", title: "Test2", exercises: MockData.exercises, ownerId: "", workoutPhoto: nil),
-        RoutineEntry(id: "", title: "Test3", exercises: MockData.exercises, ownerId: "", workoutPhoto: nil),
+        RoutineEntry(id: "", title: "Test", trackedExercises: [], ownerId: ""),
+        RoutineEntry(id: "", title: "Test2", trackedExercises: [], ownerId: ""),
+        RoutineEntry(id: "", title: "Test3", trackedExercises: [], ownerId: ""),
     ]
     
     static let stats: [WorkoutData] = [

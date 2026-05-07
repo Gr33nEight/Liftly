@@ -12,7 +12,6 @@ struct RoutineEntry {
     var title: String
     var trackedExercises: [TrackedExerciseEntry]
     let ownerId: String
-    var workoutPhoto: String?
     
     var exerciseTitles: [String] {
         trackedExercises.map(\.exercise).map(\.title)
