@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct PostCell: View {
     var post: PostDetails
@@ -13,56 +14,37 @@ struct PostCell: View {
     @State private var isLiked: Bool = false
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 20) {
             
-            postCellProfileInfo
-            
-            //statistics
-            Text(routine.title)
-                .fontWeight(.bold)
-                .padding(.horizontal)
-                .padding(.bottom, 10)
-                .padding(.top, -10)
-            
-            HStack (spacing: 25){
-                VStack(alignment: .leading){
-                    Text("Time")
-                        .font(.caption)
-                        .foregroundColor(.custom.tertiary)
-                    Text("1h 30min")
-                        .font(.headline)
-                }
+            VStack(spacing: 20) {
+                postCellProfileInfo
                 
-                VStack(alignment: .leading) {
-                    Text("Volume")
-                        .font(.caption)
-                        .foregroundColor(.custom.tertiary)
-                    Text("3500kg")
-                        .font(.headline)
+                //statistics
+                Text(post.title)
+                    .font(.custom.title3())
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack(spacing: 20) {
+                    StatCell(title: "Time", value: post.workout.duration.formatIntoTime(), alignment: .leading, ommitSpacer: true, ommitSecondSpacer: true, color: Color.custom.text)
+                    StatCell(title: "Volume", value: "\(post.workout.volume.formatted())kg", alignment: .leading, ommitSpacer: true, color: Color.custom.text)
                 }
-                
             }.padding(.horizontal)
             
-            Divider()
-            
-            if let photoName = routine.workoutPhoto {
+            if let img = post.image {
                 TabView{
-                    Image(photoName)
+                    KFImage(img)
                         .resizable()
-                        .scaledToFit()
-                        .frame(width: 350, height: 300)
-                        .clipped()
-                        .cornerRadius(12)
-                    
-                    exercisesSummarySlide
+                        .aspectRatio(1.0, contentMode: .fill)
+                    exercisesSummarySlide(5)
                 }
-                .frame(height: 320)
+                .frame(height: UIScreen.main.bounds.width)
                 .tabViewStyle(.page(indexDisplayMode: .always))
             } else {
-                exercisesSummarySlide
+                Divider()
+                exercisesSummarySlide(3)
+                Divider()
             }
             
-            HStack{
+            HStack(spacing: 20) {
                 Button (action: {
                     isLiked.toggle()
                 }) {
@@ -73,63 +55,70 @@ struct PostCell: View {
                 
                 Button (action: {}) {
                     Image(systemName: "message")
-                }.padding(.horizontal)
+                }
                 
                 Button(action: {}) {
                     Image(systemName: "square.and.arrow.up")
                 }
-            }
-            .padding(.horizontal)
-            .padding(.top, 10)
-            
-            Rectangle()
-                .fill(Color.gray.opacity(0.3))
-                .frame(height:10)
-                .padding(.vertical, 20)
+            }.foregroundStyle(Color.custom.text)
+                .padding(.horizontal)
         }
     }
     
     private var postCellProfileInfo: some View{
         HStack {
-            //profil photo
-            Image(systemName: "person.fill")
-                .resizable()
-                .scaledToFit()
-                .padding(10)
-                .frame(width:50, height: 50)
-                .background(Color.gray.opacity(0.3))
-                .clipShape(Circle())
+            
+            ZStack {
+                if let image = post.owner.image {
+                    KFImage(image)
+                        .resizable()
+                        .aspectRatio(1.0, contentMode: .fit)
+                        .clipShape(Circle())
+                        
+                }else{
+                    ZStack {
+                        Circle()
+                            .fill(Color.custom.darkerBackground)
+                        Image(systemName: "person")
+                            .font(.custom.title())
+                            .foregroundStyle(Color.custom.secondary)
+                    }
+                }
+            }.frame(width: 60)
             
             //describe profile
             VStack(alignment: .leading) {
-                Text("User123")
+                Text(post.owner.name)
                     .font(.headline)
                 
-                Text("3 ours ago")
+                Text(post.dateCreated.timeAgoDisplay())
                     .font(.subheadline)
                     .foregroundColor(.custom.tertiary)
             }
             
             Spacer()
             
-        } .padding()
+        }
     }
     
-    private var exercisesSummarySlide: some View {
+    private func exercisesSummarySlide(_ numberOfExercises: Int) -> some View {
         VStack (spacing: 10){
-            ForEach(routine.exercises.prefix(3), id: \.title) { exercise in
-                SimpleExcerciseRow(iconName: "figure.strengthtraining.traditional", exerciseText: exercise.title)
+            ForEach(post.exercises.prefix(numberOfExercises), id: \.title) { exercise in
+                SimpleExcerciseRow(exercise: exercise)
             }
             
-            if routine.exercises.count > 3 {
-                let hiddenCount = routine.exercises.count - 3
+            if post.exercises.count > numberOfExercises {
+                let hiddenCount = post.exercises.count - numberOfExercises
                 
                 Text("See \(hiddenCount) more exercise")
                     .font(.subheadline)
                     .foregroundColor(.custom.tertiary)
             }
-        }
-        .padding(.horizontal)
-        .padding(.top, 4)
+        }.padding(.horizontal)
     }
+}
+
+#Preview {
+    HomeView(viewModel: HomeViewModel(currentUserId: "", deletePostUseCase: MockDeletePostUseCase(), fetchPostsUseCase: MockFetchPostsUseCase(), toggleLikeUseCase: MockToggleLikeUseCase(), getUserUseCase: MockGetUserUseCase()))
+        .preferredColorScheme(.dark)
 }

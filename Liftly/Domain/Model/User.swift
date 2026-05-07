@@ -13,4 +13,5 @@ struct User: Identifiable {
     var email: String
     var followersIds: [String] = []
     var followingIds: [String] = []
+    var image: URL?
 }

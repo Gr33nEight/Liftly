@@ -10,7 +10,7 @@ import SwiftUI
 struct HomeView: View {
     @StateObject var viewModel: HomeViewModel
     var body: some View {
-        VStack(spacing: 5){
+        VStack(spacing: 0){
             HStack {
                 Text("Home")
                     .font(.custom.largeTitle())
@@ -23,38 +23,23 @@ struct HomeView: View {
                     Image(systemName: "bell")
                 }
             }.padding(.horizontal)
+                .padding(.bottom, 10)
+                .background(Color.custom.darkerBackground)
             
-            ScrollView{
-                ForEach (MockData.routines, id: \.title){ Rutine in
-                    PostCell(routine: Rutine)
-                }
+            ScrollView(showsIndicators: false) {
+                LazyVStack(spacing: 20) {
+                    ForEach (viewModel.posts, id: \.title){ post in
+                        PostCell(post: post)
+                            .padding(.vertical)
+                            .background(Color.custom.background)
+                    }
+                }.background(Color.custom.darkerBackground)
+                .padding(.top, 10)
             }
-        }
-    }
-}
-
-//Template exercise
-struct SimpleExcerciseRow: View {
-    var iconName: String
-    var exerciseText: String
-    
-    var body: some View {
-        HStack{
-            Image(systemName: iconName)
-                .resizable()
-                .scaledToFit()
-                .padding(10)
-                .frame(width: 50, height: 50)
-                .background(Color.white)
-                .foregroundColor(.black)
-                .clipShape(Circle())
-            
-            Text(exerciseText)
-                .font(.custom.body())
-                .foregroundColor(.white)
-            
-            Spacer()
-        }
+        }.background(Color.custom.background)
+            .task {
+                await viewModel.onAppear()
+            }
     }
 }
 
