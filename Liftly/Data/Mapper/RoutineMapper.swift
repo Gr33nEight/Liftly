@@ -30,11 +30,21 @@ enum RoutineMapper{
         )
     }
     
-    static func toEntry(_ domain: Routine, exercises: [Exercise]) -> RoutineEntry {
+    static func toDomain(_ input: CreateRoutineInput, routineId: String) -> Routine {
+        Routine(
+            id: routineId,
+            title: input.title,
+            exercisesIds: input.trackedExercises.map({$0.id}),
+            ownerId: input.ownerId
+        )
+            
+    }
+    
+    static func toEntry(_ domain: Routine, trackedExercises: [TrackedExerciseEntry]) -> RoutineEntry {
         return RoutineEntry(
             id: domain.id,
             title: domain.title,
-            exercises: exercises,
+            trackedExercises: trackedExercises,
             ownerId: domain.ownerId
         )
     }

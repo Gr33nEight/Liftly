@@ -14,7 +14,7 @@ final class PostRepositoryImpl: PostRepository, @unchecked Sendable {
         self.firestoreClient = firestoreClient
     }
     
-    func createPost(_ entry: PostEntry, transaction: Transaction) throws {
+    func createPost(_ entry: Post, transaction: Transaction) throws {
         let dto = PostMapper.toDTO(entry)
         try transaction.setData(dto, for: PostEndpoint.self, id: .init(value: entry.id))
     }

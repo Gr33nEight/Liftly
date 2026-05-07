@@ -47,7 +47,7 @@ extension WorkoutView {
                 .foregroundStyle(Color.custom.tertiary)
             HStack {
                 Button {
-                    
+                    navigate(.push(.createRoutine))
                 } label: {
                     Text("📋  New Routine")
                         .font(.custom.body())
