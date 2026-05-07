@@ -10,27 +10,32 @@ import Combine
 
 @MainActor
 final class HomeViewModel: ObservableObject {
-    @Published var posts: [PostEntry] = []
+    @Published var posts: [PostDetails] = []
+    @Published var currentUser: User?
     
     private let currentUserId: String
     private let deletePostUseCase: DeletePostUseCase
     private let fetchPostsUseCase: FetchPostsUseCase
     private let toggleLikeUseCase: ToggleLikeUseCase
+    private let getUserUseCase: GetUserUseCase
     
     init(
         currentUserId: String,
         deletePostUseCase: DeletePostUseCase,
         fetchPostsUseCase: FetchPostsUseCase,
-        toggleLikeUseCase: ToggleLikeUseCase
+        toggleLikeUseCase: ToggleLikeUseCase,
+        getUserUseCase: GetUserUseCase
     ) {
         self.currentUserId = currentUserId
         self.deletePostUseCase = deletePostUseCase
         self.fetchPostsUseCase = fetchPostsUseCase
         self.toggleLikeUseCase = toggleLikeUseCase
+        self.getUserUseCase = getUserUseCase
     }
     
     func onAppear() async {
         await fetchPosts()
+        await fetchCurrentUser()
     }
     
     func deletePost(_ post: Post) async {
@@ -51,10 +56,11 @@ final class HomeViewModel: ObservableObject {
 
         let toggledPost = posts[idx]
         
-        if posts[idx].likedUsersIds.contains(currentUserId) {
-            posts[idx].likedUsersIds.removeAll(where: {$0 == currentUserId})
+        if posts[idx].likedUsers.contains(where: {$0.id == currentUserId}) {
+            posts[idx].likedUsers.removeAll(where: {$0.id == currentUserId})
         }else{
-            posts[idx].likedUsersIds.append(currentUserId)
+            guard let currentUser else { return }
+            posts[idx].likedUsers.append(currentUser)
         }
         
         do {
@@ -68,6 +74,14 @@ final class HomeViewModel: ObservableObject {
     private func fetchPosts() async {
         do {
             posts = try await fetchPostsUseCase.execute(userId: currentUserId)
+        } catch {
+            print("Error: \(error.localizedDescription)")
+        }
+    }
+    
+    private func fetchCurrentUser() async {
+        do {
+            currentUser = try await getUserUseCase.execute(by: currentUserId)
         } catch {
             print("Error: \(error.localizedDescription)")
         }

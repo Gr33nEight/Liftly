@@ -10,12 +10,12 @@ import Foundation
 struct RoutineEntry {
     var id: String
     var title: String
-    var exercises: [Exercise]
+    var trackedExercises: [TrackedExerciseEntry]
     let ownerId: String
     var workoutPhoto: String?
     
     var exerciseTitles: [String] {
-        exercises.map(\.title)
+        trackedExercises.map(\.exercise).map(\.title)
     }
 }
 

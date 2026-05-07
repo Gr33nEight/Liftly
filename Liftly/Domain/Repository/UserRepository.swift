@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol UserRepository {
+protocol UserRepository: Sendable {
     func createUser(user: User) async throws
     func deleteUser(userId: String) async throws
     func listenToUser(userId: String) -> AsyncThrowingStream<User, Error>

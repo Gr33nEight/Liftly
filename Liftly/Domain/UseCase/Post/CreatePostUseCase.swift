@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CreatePostUseCase {
-    func execute(entry: PostEntry, image: Data?) async throws
+    func execute(input: CreatePostInput) async throws
 }
 
 final class CreatePostUseCaseImpl: CreatePostUseCase {
@@ -33,39 +33,38 @@ final class CreatePostUseCaseImpl: CreatePostUseCase {
         self.storageRepo = storageRepo
     }
     
-    func execute(entry: PostEntry, image: Data?) async throws {
-        var updatedEntry = entry
+    func execute(input: CreatePostInput) async throws {
+        let postId = UUID().uuidString
+        var imageURL: URL?
         var uploadedPath: StoragePath?
         
         do {
-            // 🔥 STEP 1: upload image
-            if let imageData = image {
-                let path = StoragePath.postImage(postId: entry.id)
+            if let imageData = input.image {
+                let path = StoragePath.postImage(postId: postId)
+                let url = try await storageRepo.uploadImage(data: imageData, path: path)
                 
-                let url = try await storageRepo.uploadImage(
-                    data: imageData,
-                    path: path
-                )
-                
-                updatedEntry.image = url
+                imageURL = url
                 uploadedPath = path
             }
             
+            let workout = input.workout
+            let post = PostMapper.toDomain(input, postId: postId, imageUrl: imageURL, workoutId: workout.id)
+            
             try await transactionProvider.runTransaction {
-                [trackedExerciseRepo, workoutRepo, postRepo, updatedEntry] transaction in
+                [trackedExerciseRepo, workoutRepo, postRepo] transaction in
                 
                 try trackedExerciseRepo.createExercises(
-                    updatedEntry.workout.trackedExercises,
+                    workout.trackedExercises,
                     transaction: transaction
                 )
                 
                 try workoutRepo.createWorkout(
-                    updatedEntry.workout,
+                    workout,
                     transaction: transaction
                 )
                 
                 try postRepo.createPost(
-                    updatedEntry,
+                    post,
                     transaction: transaction
                 )
             }
@@ -81,7 +80,7 @@ final class CreatePostUseCaseImpl: CreatePostUseCase {
 }
 
 final class MockCreatePostUseCase: CreatePostUseCase {
-    func execute(entry: PostEntry, image: Data?) async throws {
+    func execute(input: CreatePostInput) async throws {
         return
     }
 }

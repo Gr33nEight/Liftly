@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ToggleLikeUseCase {
-    func execute(post: PostEntry, userId: String) async throws
+    func execute(post: PostDetails, userId: String) async throws
 }
 
 final class ToggleLikeUseCaseImpl: ToggleLikeUseCase {
@@ -18,8 +18,8 @@ final class ToggleLikeUseCaseImpl: ToggleLikeUseCase {
         self.postRepository = postRepository
     }
     
-    func execute(post: PostEntry, userId: String) async throws {
-        if post.likedUsersIds.contains(userId) {
+    func execute(post: PostDetails, userId: String) async throws {
+        if post.likedUsers.contains(where: { $0.id == userId }) {
             try await postRepository.removeLikeToPost(with: post.id, userId: userId)
         }else{
             try await postRepository.addLikeToPost(with: post.id, userId: userId)

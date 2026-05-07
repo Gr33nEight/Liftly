@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class RoutineRepositoryImpl: RoutineRepository {
+final class RoutineRepositoryImpl: RoutineRepository, @unchecked Sendable {
     private let firestoreClient: FirestoreClient
     
     init(firestoreClient: FirestoreClient) {
@@ -23,5 +23,10 @@ final class RoutineRepositoryImpl: RoutineRepository {
     func fetchRoutine(with id: String) async throws -> Routine {
         let dto = try await firestoreClient.fetchDocument(RoutineEndpoint.self, id: .init(value: id))
         return try RoutineMapper.toDomain(dto)
+    }
+    
+    func createRoutine(_ routine: Routine, transaction: any Transaction) throws {
+        let dto = RoutineMapper.toDTO(routine)
+        try transaction.setData(dto, for: RoutineEndpoint.self, id: .init(value: routine.id))
     }
 }

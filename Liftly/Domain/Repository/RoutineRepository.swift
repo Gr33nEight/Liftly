@@ -7,7 +7,8 @@
 
 import Foundation
 
-protocol RoutineRepository {
+protocol RoutineRepository: Sendable {
     func fetchRoutines(for uid: String) async throws -> [Routine]
     func fetchRoutine(with id: String) async throws -> Routine
+    func createRoutine(_ routine: Routine, transaction: Transaction) throws
 }

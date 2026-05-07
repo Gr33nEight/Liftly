@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class UserRepositoryImpl: UserRepository {
+final class UserRepositoryImpl: UserRepository, @unchecked Sendable {
     private let firestoreClient: FirestoreClient
     
     init(firestoreClient: FirestoreClient) {
@@ -30,6 +30,7 @@ final class UserRepositoryImpl: UserRepository {
     }
     
     func fetchUsers(by userIds: [String]) async throws -> [User] {
+        guard !userIds.isEmpty else { return [] }
         let query = FirestoreQuery().isIn(.documentId, userIds.map({.string($0)}))
         let dtos = try await firestoreClient.fetch(UserEndpoint.self, query: query)
         return try dtos.map({ try UserMapper.toDomain($0) })

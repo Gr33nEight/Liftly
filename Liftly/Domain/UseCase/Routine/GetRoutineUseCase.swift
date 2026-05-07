@@ -14,18 +14,34 @@ protocol GetRoutineUseCase {
 final class GetRoutineUseCaseImpl: GetRoutineUseCase {
     private let routineRepository: RoutineRepository
     private let exerciseRepository: ExerciseRepository
+    private let trackedExerciseRepository: TrackedExerciseRepository
     
-    init(routineRepository: RoutineRepository, exerciseRepository: ExerciseRepository) {
+    init(routineRepository: RoutineRepository, exerciseRepository: ExerciseRepository, trackedExerciseRepository: TrackedExerciseRepository) {
         self.routineRepository = routineRepository
         self.exerciseRepository = exerciseRepository
+        self.trackedExerciseRepository = trackedExerciseRepository
     }
     
     func execute(routineId: String) async throws -> RoutineEntry {
-        let allExercises = await exerciseRepository.getAll()
         let domain = try await routineRepository.fetchRoutine(with: routineId)
-        let exercises = allExercises.filter({ domain.exercisesIds.contains($0.id) })
+        let trackedExercises = try await trackedExerciseRepository.fetchExercises(by: routineId)
+        let exercises = await exerciseRepository.getAll()
+        let exercisesDict = Dictionary(uniqueKeysWithValues: exercises.map { ($0.id, $0) })
         
-        return RoutineMapper.toEntry(domain, exercises: exercises)
+        let trackedEntries: [TrackedExerciseEntry] = trackedExercises.compactMap { tracked in
+            guard let exercise = exercisesDict[tracked.exerciseId] else { return nil }
+        
+            let test =  TrackedExerciseEntry(
+                id: tracked.id,
+                workoutId: routineId,
+                exercise: exercise,
+                restTime: tracked.restTime,
+                sets: tracked.sets
+            )
+            return test
+        }
+        
+        return RoutineMapper.toEntry(domain, trackedExercises: trackedEntries)
     }
 }
 
