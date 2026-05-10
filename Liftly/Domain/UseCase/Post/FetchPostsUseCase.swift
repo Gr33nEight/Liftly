@@ -82,3 +82,9 @@ final class FetchPostsUseCaseImpl: FetchPostsUseCase {
         }
     }
 }
+
+final class MockFetchPostsUseCase: FetchPostsUseCase{
+    func execute(userId: String) async throws -> [PostDetails] {
+        return []
+    }
+}

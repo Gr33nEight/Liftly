@@ -28,3 +28,10 @@ final class DeletePostUseCaseImpl: DeletePostUseCase {
         try await postRepository.deletePost(post, trackedExercises: trackedExercises)
     }
 }
+
+final class MockDeletePostUseCase: DeletePostUseCase{
+    func execute(post: Post) async throws {
+        return
+    }
+}
+
