@@ -8,8 +8,32 @@
 import SwiftUI
 
 struct RegisterView: View {
+    @State private var email: String = ""
+    @State private var password: String = ""
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack{
+            Color.custom.background
+                .ignoresSafeArea()
+            
+            VStack{
+                Text("Sign in")
+                
+                CustomTextField(text: $email, placeholder: "Enter your email")
+                
+                CustomTextField(text: $password, placeholder: "Passwor", isPassword: true)
+                
+                CustomTextField(text: $password, placeholder: "Enter your password again", isPassword: true)
+                
+                Button(action: {}) {
+                    Text("Sign in")
+                }
+                .padding()
+                .background(Color.custom.secondary)
+                .cornerRadius(10)
+            }
+            .padding(.horizontal, 20)
+        }
+        .foregroundColor(Color.custom.text)
     }
 }
 
