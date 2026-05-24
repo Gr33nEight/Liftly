@@ -7,7 +7,7 @@
 
 
 import SwiftUI
-import SwipeCell
+//import SwipeCell
 import Kingfisher
 
 struct TrackedExerciseView: View {
