@@ -64,7 +64,7 @@ struct RegisterView: View {
                         .padding(.top, -35)
                 }
                 
-                CustomTextField(text: $confirmPassword, iconName: "lock", placeholder: "Password again", isPassword: true)
+                CustomTextField(text: $confirmPassword, iconName: "lock", placeholder: "Confirm Password", isPassword: true)
                     .padding(.bottom, 30)
                 if showError, let error = validateConfirmPasswor().errorMessage {
                     Text(error)
