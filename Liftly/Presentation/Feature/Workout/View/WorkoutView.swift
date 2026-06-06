@@ -11,10 +11,14 @@ struct WorkoutView: View {
     @Environment(\.navigate) var navigate
     @StateObject var viewModel: WorkoutViewModel
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading, spacing: 0) {
             Text("Workout")
                 .font(.custom.largeTitle())
                 .foregroundStyle(Color.custom.text)
+                .padding(.horizontal)
+                .padding(.bottom, 10)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color.custom.darkerBackground)
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 30) {
                     Button {
@@ -28,9 +32,9 @@ struct WorkoutView: View {
                     }
                     routinesView
                     myRoutinesView
-                }
-            }
-        }.padding(.horizontal)
+                }.padding(.top, 20)
+            }.padding(.horizontal)
+        }
         .frame(maxWidth: .infinity)
         .background(Color.custom.background)
         .task {
@@ -85,6 +89,6 @@ extension WorkoutView {
 }
 
 #Preview {
-//    WorkoutView(viewModel: WorkoutViewModel(getExercisesUseCase: MockGetExercisesUseCase()))
-//        .preferredColorScheme(.dark)
+    WorkoutView(viewModel: WorkoutViewModel(currentUserId: "", getRoutinesUseCase: MockGetRoutinesUseCase()))
+    .preferredColorScheme(.dark)
 }

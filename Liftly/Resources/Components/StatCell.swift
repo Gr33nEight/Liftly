@@ -12,6 +12,8 @@ struct StatCell: View {
     let value: String
     let alignment: HorizontalAlignment
     var ommitSpacer: Bool = false
+    var ommitSecondSpacer: Bool = false
+    var color: Color = Color.custom.secondary
     var body: some View {
         HStack {
             if !ommitSpacer {
@@ -23,9 +25,11 @@ struct StatCell: View {
                     .foregroundStyle(Color.custom.tertiary)
                 Text(value)
                     .font(.custom.bodyMedium())
-                    .foregroundStyle(Color.custom.secondary)
+                    .foregroundStyle(color)
             }
-            Spacer()
+            if !ommitSecondSpacer {
+                Spacer()
+            }
         }
     }
 }

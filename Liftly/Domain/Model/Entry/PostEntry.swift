@@ -18,4 +18,8 @@ struct PostDetails {
     var likedUsers: [User]
     var comments: [Comment]
     var workout: WorkoutEntry
+    
+    var exercises: [Exercise] {
+        workout.trackedExercises.map({$0.exercise})
+    }
 }

@@ -22,3 +22,9 @@ final class GetUserUseCaseImpl: GetUserUseCase {
         try await userRepository.fetchUser(by: id)
     }
 }
+
+final class MockGetUserUseCase: GetUserUseCase {
+    func execute(by id: String) async throws -> User {
+        return MockData.users[0]
+    }
+}
