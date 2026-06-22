@@ -22,45 +22,51 @@ enum ValidationResult {
 struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var correctEmai: String = "Test@gmail.com"
-    @State private var correctPassword: String = "Test1234"
+    private static var correctEmai: String = "Test@gmail.com"
+    private static var correctPassword: String = "Test1234"
     @State private var showError: Bool = false
     var body: some View {
         ZStack{
             Color.custom.background
                 .ignoresSafeArea()
             
-            VStack{
+            VStack(spacing: 0){
+                Spacer()
+                
                 Text("Welcome in Liftly")
-                    .padding(.top, 160)
-                    .font(.largeTitle)
+                    .font(.custom.largeTitle())
                 
                 Text("Login your acount with")
-                    .font(.title3)
-                    .padding(.top, -13)
+                    .font(.custom.title3())
+                
                 Text("Email and Password")
-                    .padding(.bottom, 40)
-                    .font(.title3)
+                    .font(.custom.title3())
+                Spacer()
                     
                 
                 Divider()
                     .background(Color.custom.tertiary)
                 
-                CustomTextField(text: $email, iconName: "envelope", placeholder: "Email")
-                    .padding(.vertical, 30)
-                if showError, let error = validateEmail().errorMessage {
-                    Text(error)
-                        .foregroundStyle(Color.red)
-                        .padding(.top, -35)
+                VStack(alignment: .leading, spacing: 5){
+                    CustomTextField(text: $email, iconName: "envelope", placeholder: "Email")
+                    
+                    if showError, let error = validateEmail().errorMessage {
+                        Text(error)
+                            .foregroundStyle(Color.red)
+                    }
+                }
+                .padding(.vertical, 30)
+                
+                VStack(alignment: .leading, spacing: 5){
+                    CustomTextField(text: $password, iconName: "lock", placeholder: "Password", isPassword: true)
+                    
+                    if showError, let error = validPassword().errorMessage {
+                        Text(error)
+                            .foregroundStyle(Color.red)
+                    }
                 }
                 
-                CustomTextField(text: $password, iconName: "lock", placeholder: "Password", isPassword: true)
-                    .padding(.bottom, 30)
-                if showError, let error = validPassword().errorMessage {
-                    Text(error)
-                        .foregroundStyle(Color.red)
-                        .padding(.top, -35)
-                }
+                Spacer()
                 
                 Button(action: {
                     if isFormValid{
@@ -104,14 +110,14 @@ struct LoginView: View {
     
     func validateEmail() -> ValidationResult {
         let emailPattern = #"^\S+@\S+\.\S+$"#
-        if email.range(of: emailPattern, options: .regularExpression) == nil && email != correctEmai {
+        if email.range(of: emailPattern, options: .regularExpression) == nil && email != LoginView.correctEmai {
             return.failure("Enter a correct Email addres")
         }
         return .success
     }
     
     func validPassword() -> ValidationResult {
-        if password.count < 8 && password != correctPassword {
+        if password.count < 8 && password != LoginView.correctPassword {
             return .failure("Enter correct Password")
         }
         return .success
