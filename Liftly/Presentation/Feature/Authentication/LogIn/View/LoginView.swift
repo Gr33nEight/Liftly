@@ -22,7 +22,7 @@ enum ValidationResult {
 struct LoginView: View {
     @State private var email: String = ""
     @State private var password: String = ""
-    private static var correctEmai: String = "Test@gmail.com"
+    private static var correctEmail: String = "Test@gmail.com"
     private static var correctPassword: String = "Test1234"
     @State private var showError: Bool = false
     var body: some View {
@@ -110,7 +110,7 @@ struct LoginView: View {
     
     func validateEmail() -> ValidationResult {
         let emailPattern = #"^\S+@\S+\.\S+$"#
-        if email.range(of: emailPattern, options: .regularExpression) == nil && email != LoginView.correctEmai {
+        if email.range(of: emailPattern, options: .regularExpression) == nil && email != LoginView.correctEmail {
             return.failure("Enter a correct Email addres")
         }
         return .success
